@@ -24,25 +24,6 @@ Key features include:
 
 ![Frontend Interface](https://github.com/thiagomurtinho/full-stack-product-and-category/raw/main/doc/img/page.png)
 
-### Dedicated Products Page with Category Tree Navigation
-
-The application features a dedicated products page that demonstrates the category tree path functionality. Users can navigate through the hierarchical category structure, and the URL dynamically composes the full path showing the complete category hierarchy.
-
-**Features:**
-- **Dynamic URL composition**: URLs reflect the complete category path (e.g., `/products/electronics/computers/laptops`)
-- **Breadcrumb navigation**: Shows the full category hierarchy in the URL path
-- **Category tree integration**: Seamless navigation through nested categories
-- **Responsive design**: Works across all device sizes
-
-![Frontend Product Screen](https://github.com/thiagomurtinho/full-stack-product-and-category/raw/main/doc/img/product-page.png)
-
-**Example URL Structure:**
-```
-/products/electronics/computers/laptops/gaming-laptops
-/products/electronics/smartphones/iphone
-/products/electronics/components/processors
-```
-
 ## 🚀 Quick Start
 
 ```bash
@@ -64,6 +45,7 @@ This will automatically:
 ## 📑 Index
 
 1. [Technical Questions & Answers](#-technical-questions--answers)
+   - [1.1 Frontend Implementation: Dedicated Products Page](#frontend-implementation-dedicated-products-page-with-category-tree-navigation)
 2. [Architecture](#-architecture)
    - [Backend](#backend)
    - [Frontend](#frontend)
@@ -112,6 +94,25 @@ Example Response:
     "updatedAt": "2025-08-05T16:43:37.099Z"
   }
 ]
+```
+
+#### **Frontend Implementation: Dedicated Products Page with Category Tree Navigation**
+
+The application features a dedicated products page that demonstrates the category tree path functionality. Users can navigate through the hierarchical category structure, and the URL dynamically composes the full path showing the complete category hierarchy.
+
+**Features:**
+- **Dynamic URL composition**: URLs reflect the complete category path (e.g., `/products/electronics/computers/laptops`)
+- **Breadcrumb navigation**: Shows the full category hierarchy in the URL path
+- **Category tree integration**: Seamless navigation through nested categories
+- **Responsive design**: Works across all device sizes
+
+![Frontend Product Screen](https://github.com/thiagomurtinho/full-stack-product-and-category/raw/main/doc/img/product-page.png)
+
+**Example URL Structure:**
+```
+/products/electronics/computers/laptops/gaming-laptops
+/products/electronics/smartphones/iphone
+/products/electronics/components/processors
 ```
 
 ### 2. **How to build the final URL-style path for categories?**
