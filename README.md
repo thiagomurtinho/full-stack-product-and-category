@@ -4,7 +4,7 @@
 
 This project is a full-stack application showcasing a robust architecture and modern development practices. It includes:
 
-- **Backend**: Built with Express.js, TypeScript, and Prisma ORM, following Domain-Driven Design (DDD) principles. It features Swagger API documentation and a clear separation of layers (domain, repository, handler, routes, middleware).
+- **Backend**: Built with Express.js, TypeScript, and Prisma ORM, following Functional Core/Imperative Shell ans Domain-Driven Design (DDD) principles. It features Swagger API documentation and a clear separation of layers (domain, repository, handler, routes, middleware).
 - **Frontend**: Developed with Next.js 15 and React 19, implementing DDD with a separate data layer and reusable contracts. The interface is modern, responsive, and styled with Tailwind CSS and Radix UI.
 - **Testing**: Comprehensive unit and integration tests for both backend and frontend, achieving 80% test coverage.
 - **Database**: PostgreSQL managed via Docker, with Prisma ORM for schema and migrations.
@@ -75,16 +75,20 @@ Example Response:
 ```json
 [
   {
-    "id": "1",
+    "id": "7706f75a-1416-45e6-a5cb-d47ca16f3ac7",
     "name": "Electronics",
+    "slug": "electronics",
     "parentId": null,
-    "children": [
-      {
-        "id": "2",
-        "name": "Computers",
-        "parentId": "1"
-      }
-    ]
+    "createdAt": "2025-08-05T16:43:37.093Z",
+    "updatedAt": "2025-08-05T16:43:37.093Z"
+  },
+  {
+    "id": "ac370b9b-c530-4e4b-bd9e-7cbdcfde0d6a",
+    "name": "Computers",
+    "slug": "computers",
+    "parentId": "7706f75a-1416-45e6-a5cb-d47ca16f3ac7",
+    "createdAt": "2025-08-05T16:43:37.099Z",
+    "updatedAt": "2025-08-05T16:43:37.099Z"
   }
 ]
 ```
@@ -98,16 +102,39 @@ Example Response:
 
 Example API Request:
 ```bash
-curl -X GET http://localhost:5000/api/categories/1/path
+curl -X GET http://localhost:5000/api/categories/path/gaming-laptops
 ```
 
 Example Response:
 ```json
 {
-  "ids": ["1", "2"],
-  "names": ["Electronics", "Computers"],
-  "slugs": ["electronics", "computers"],
-  "fullPath": "electronics/computers"
+  "id": "2d120850-086e-4e6a-b8b9-97ee13e7a94b",
+  "name": "Gaming Laptops",
+  "slug": "gaming-laptops",
+  "parentId": "0d583d96-7d0a-4987-92ce-d7ea1dde8551",
+  "createdAt": "2025-08-05T16:43:37.103Z",
+  "updatedAt": "2025-08-05T16:43:37.103Z",
+  "path": {
+    "ids": [
+      "7706f75a-1416-45e6-a5cb-d47ca16f3ac7",
+      "ac370b9b-c530-4e4b-bd9e-7cbdcfde0d6a",
+      "0d583d96-7d0a-4987-92ce-d7ea1dde8551",
+      "2d120850-086e-4e6a-b8b9-97ee13e7a94b"
+    ],
+    "names": [
+      "Electronics",
+      "Computers",
+      "Laptops",
+      "Gaming Laptops"
+    ],
+    "slugs": [
+      "electronics",
+      "computers",
+      "laptops",
+      "gaming-laptops"
+    ],
+    "fullPath": "electronics/computers/laptops/gaming-laptops"
+  }
 }
 ```
 
@@ -122,16 +149,31 @@ Example Response:
 ```prisma
 model Category {
   id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
   parentId  String?
-  parent    Category? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  parent    Category? @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
   children  Category[] @relation("CategoryHierarchy")
   products  Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("categories")
 }
 
 model Product {
   id          String   @id @default(uuid())
-  categories  Category[] // Many-to-many relationship
-}
+  name        String
+  slug        String   @unique
+  description String?
+  price       Float
+  imageUrl    String?
+  categories  Category[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("products")
+} 
 ```
 
 ---
@@ -266,7 +308,7 @@ git clone <your-repository>
 cd full-stack-product-and-category
 
 # Run complete production setup
-./setup.sh
+bash setup.sh
 ```
 
 #### Method B: Manual step-by-step setup
@@ -324,10 +366,10 @@ pnpm status             # Check status of all services
 pnpm restart            # Restart all services
 
 # Alternative commands (using bash scripts directly)
-./setup.sh              # Complete production setup and start all services
-./stop-services.sh      # Stop all running services
-./status.sh             # Check status of all services
-./restore-turbopack.sh  # Restore Turbopack for development
+bash setup.sh              # Complete production setup and start all services
+bash stop-services.sh      # Stop all running services
+bash status.sh             # Check status of all services
+bash restore-turbopack.sh  # Restore Turbopack for development
 ```
 
 ### Package.json Commands (from root)
@@ -396,12 +438,30 @@ pnpm test         # Run tests
 
 ## 📚 API Endpoints
 
+### Health
 - `GET /api/health` - Health check
-- `GET /api/categories` - List categories
-- `GET /api/products` - List products (with pagination)
+
+### Categories
+- `GET /api/categories` - List categories (with pagination)
+- `GET /api/categories/count` - Count categories
+- `GET /api/categories/{id}` - Get category by ID
+- `GET /api/categories/slug/{slug}` - Get category by slug
+- `GET /api/categories/path/{slug}` - Get category with full path
+- `GET /api/categories/children/{parentId}` - Get category children
+- `POST /api/categories` - Create category
+- `PUT /api/categories/{id}` - Update category
+- `DELETE /api/categories/{id}` - Delete category
+
+### Products
+- `GET /api/products` - List products (with pagination, filters, search)
+- `GET /api/products/count` - Count products
+- `GET /api/products/search` - Fuzzy search products
+- `GET /api/products/{id}` - Get product by ID
+- `GET /api/products/slug/{slug}` - Get product by slug
+- `GET /api/products/by-category/{path}` - Get products by category path
 - `POST /api/products` - Create product
-- `PUT /api/products/:id` - Update product
-- `DELETE /api/products/:id` - Delete product
+- `PUT /api/products/{id}` - Update product
+- `DELETE /api/products/{id}` - Delete product
 
 ---
 
