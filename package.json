@@ -1,0 +1,38 @@
+{
+  "name": "full-stack-product-and-category",
+  "version": "1.0.0",
+  "description": "Full Stack Product and Category - Interview Challenge",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel dev",
+    "dev:api": "pnpm --filter api dev",
+    "dev:web": "pnpm --filter web dev",
+    "build": "pnpm --recursive build",
+    "build:api": "pnpm --filter api build",
+    "build:web": "pnpm --filter web build",
+    "test": "pnpm --recursive test",
+    "test:api": "pnpm --filter api test",
+    "test:web": "pnpm --filter web test",
+    "install:all": "pnpm install",
+    "db:setup": "pnpm --filter api db:generate && pnpm --filter api db:reset",
+    "db:reset": "pnpm --filter api db:reset",
+    "docker:up": "docker-compose up -d postgres",
+    "docker:down": "docker-compose down",
+    "setup": "./setup.sh",
+    "start": "pnpm dev"
+  },
+  "keywords": [
+    "full-stack",
+    "express",
+    "nextjs",
+    "typescript",
+    "prisma",
+    "postgresql",
+    "interview"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.10.0"
+  }
+} 

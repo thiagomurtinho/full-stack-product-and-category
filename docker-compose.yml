@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: full-stack-product-and-category-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fullstack_product_and_category
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./api/prisma/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - fullstack-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d fullstack_product_and_category"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  fullstack-network:
+    driver: bridge 
