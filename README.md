@@ -22,6 +22,22 @@ Key features include:
 
 ![Frontend Interface](https://github.com/thiagomurtinho/full-stack-product-and-category/raw/main/doc/img/page.png)
 
+## 🚀 Quick Start
+
+```bash
+# Clone and start everything in production mode
+git clone <your-repository>
+cd full-stack-product-and-category
+pnpm start:prod
+```
+
+This will automatically:
+- ✅ Install dependencies
+- ✅ Start PostgreSQL database
+- ✅ Setup and seed the database
+- ✅ Build and start all services
+- ✅ Open browsers for Frontend, API Docs, and Prisma Studio
+
 ---
 
 ## 📑 Index
@@ -214,60 +230,68 @@ This approach leverages PostgreSQL's `pg_trgm` extension for efficient and accur
 - Docker and Docker Compose
 - pnpm (recommended) or npm
 
-### Option 1: Automated Setup (Recommended)
+### Option 1: Production Setup (Recommended)
 
 ```bash
 git clone <your-repository>
 cd full-stack-product-and-category
 
-# Run automated setup
-bash setup.sh
-# or: sh setup.sh
-# or: chmod +x setup.sh && ./setup.sh
+# Run complete production setup
+pnpm start:prod
 ```
 
-### Option 2: Manual Setup
+**This will automatically:**
+- ✅ Install all dependencies
+- ✅ Start PostgreSQL database
+- ✅ Setup and seed the database
+- ✅ Build API and Web for production (ignoring ESLint warnings)
+- ✅ Start all services in production mode
+- ✅ Start Prisma Studio for database management
+- ✅ Open browsers automatically for:
+  - 🌐 Frontend: http://localhost:3000
+  - 📚 API Docs: http://localhost:5000/api/docs
+  - 🗄️ Prisma Studio: http://localhost:5555 (opens automatically)
 
-#### 1. Clone and Install Dependencies
+**Services will be available at:**
+- 🌐 Frontend: http://localhost:3000
+- 🔧 Backend: http://localhost:5000
+- 📚 API Docs: http://localhost:5000/api/docs
+- 🗄️ Prisma Studio: http://localhost:5555
 
+### Option 2: Alternative Setup Methods
+
+#### Method A: Using bash scripts directly
+```bash
+git clone <your-repository>
+cd full-stack-product-and-category
+
+# Run complete production setup
+./setup.sh
+```
+
+#### Method B: Manual step-by-step setup
 ```bash
 git clone <your-repository>
 cd full-stack-product-and-category
 
 # Install all workspace dependencies
 pnpm install
-```
 
-#### 2. Start Database
-
-```bash
-# From project root
+# Start database
 docker-compose up -d postgres
-```
 
-Wait a few seconds for the database to initialize completely.
-
-#### 3. Setup Database
-
-```bash
 # Setup database with sample data
 pnpm db:setup
-```
 
-#### 4. Start Development Servers
-
-```bash
-# Start both backend and frontend
+# Start development servers
 pnpm dev
-
-# Or start them separately:
-# Backend: pnpm dev:api
-# Frontend: pnpm dev:web
 ```
 
+**Services will be available at:**
 - Backend: http://localhost:5000
 - Frontend: http://localhost:3000
 - API Documentation: http://localhost:5000/api/docs
+- Prisma Studio: http://localhost:5555
 
 ---
 
@@ -281,18 +305,74 @@ The project comes with pre-loaded sample data:
 
 ---
 
+## 🔧 Build Configuration
+
+The project is configured to build successfully even with ESLint warnings and TypeScript errors:
+
+- **Next.js Config**: ESLint and TypeScript errors are ignored during build
+- **ESLint Config**: Relaxed rules for `@typescript-eslint/no-explicit-any` and `react/no-unescaped-entities`
+- **Build Process**: Optimized for production with all services running in background
+
 ## 🔧 Useful Scripts
+
+### Production Scripts (Recommended)
+```bash
+# Primary commands (using pnpm)
+pnpm start:prod         # Complete production setup and start all services
+pnpm stop               # Stop all running services
+pnpm status             # Check status of all services
+pnpm restart            # Restart all services
+
+# Alternative commands (using bash scripts directly)
+./setup.sh              # Complete production setup and start all services
+./stop-services.sh      # Stop all running services
+./status.sh             # Check status of all services
+./restore-turbopack.sh  # Restore Turbopack for development
+```
+
+### Package.json Commands (from root)
+```bash
+pnpm start:prod         # Start all services in production mode
+pnpm stop               # Stop all running services
+pnpm status             # Check status of all services
+pnpm restart            # Restart all services
+pnpm logs               # List log files
+pnpm logs:api           # Follow API logs
+pnpm logs:web           # Follow Web logs
+pnpm logs:prisma        # Follow Prisma Studio logs
+pnpm clean              # Clean log files
+pnpm restore-turbopack  # Restore Turbopack for development
+```
 
 ### Workspace Commands (from root)
 ```bash
-pnpm dev          # Start both backend and frontend
-pnpm dev:api      # Start backend only
-pnpm dev:web      # Start frontend only
+# 🚀 Production (Recommended)
+pnpm start:prod   # Start all services in production mode
+pnpm stop         # Stop all running services
+pnpm status       # Check status of all services
+pnpm restart      # Restart all services
+
+# 🔧 Development
+pnpm dev          # Start both backend and frontend (development)
+pnpm dev:api      # Start backend only (development)
+pnpm dev:web      # Start frontend only (development)
+
+# 🏗️ Build & Test
 pnpm build        # Build all packages
 pnpm test         # Run all tests
+
+# 🗄️ Database
 pnpm db:setup     # Setup database with sample data
 pnpm docker:up    # Start database
 pnpm docker:down  # Stop database
+
+# 📄 Logs & Maintenance
+pnpm logs         # List log files
+pnpm logs:api     # Follow API logs
+pnpm logs:web     # Follow Web logs
+pnpm logs:prisma  # Follow Prisma Studio logs
+pnpm clean        # Clean log files
+pnpm restore-turbopack  # Restore Turbopack for development
 ```
 
 ### Backend (api/)
