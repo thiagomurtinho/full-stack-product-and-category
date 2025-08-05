@@ -14,6 +14,11 @@ if ! command -v pnpm &> /dev/null; then
     npm install -g pnpm
 fi
 
+echo "🧹 Cleaning up conflicting lockfiles..."
+# Remove conflicting lockfiles that might cause issues
+rm -f web/pnpm-lock.yaml
+rm -f pnpm-lock.yaml
+
 echo "📦 Installing workspace dependencies..."
 pnpm install
 
@@ -32,20 +37,108 @@ if [ ! -f .env ]; then
 fi
 
 # Generate Prisma client and populate database
+echo "🔧 Generating Prisma client..."
 pnpm db:generate
+
+echo "🌱 Resetting and seeding database..."
 pnpm db:reset
+
+echo "🏗️ Building API for production..."
+pnpm build
 
 cd ..
 
-echo "✅ Setup completed!"
+echo "🏗️ Building Web for production..."
+cd web
+
+# Temporarily disable Turbopack to avoid issues
+if [ -f package.json ]; then
+    # Create a backup of the original package.json
+    cp package.json package.json.backup
+    
+    # Update the dev script to not use turbopack
+    sed -i '' 's/"dev": "next dev --turbopack"/"dev": "next dev"/' package.json
+    
+    echo "✅ Temporarily disabled Turbopack to avoid startup issues"
+fi
+
+echo "🏗️ Building Next.js application..."
+pnpm build
+
+cd ..
+
+echo "🚀 Starting all services in production mode..."
+
+# Start API in production mode
+echo "🔧 Starting API server in production mode..."
+cd api
+nohup pnpm start:prod > ../api.log 2>&1 &
+API_PID=$!
+cd ..
+
+# Start Web in production mode
+echo "🌐 Starting Web server in production mode..."
+cd web
+nohup pnpm start > ../web.log 2>&1 &
+WEB_PID=$!
+cd ..
+
+# Start Prisma Studio
+echo "🗄️ Starting Prisma Studio..."
+cd api
+nohup pnpm prisma studio > ../prisma-studio.log 2>&1 &
+PRISMA_PID=$!
+cd ..
+
+# Wait a moment for services to start
+sleep 5
+
 echo ""
-echo "🎯 To start the project:"
-echo "1. Run both: pnpm dev"
-echo "2. Or separately: pnpm dev:api && pnpm dev:web"
+echo "✅ All services started successfully!"
 echo ""
-echo "💡 Tip: You can also use 'pnpm setup' from the root directory"
+echo "📱 Service URLs:"
+echo "- 🌐 Frontend (Production): http://localhost:3000"
+echo "- 🔧 Backend (Production): http://localhost:5000"
+echo "- 📚 API Documentation: http://localhost:5000/api/docs"
+echo "- 🗄️ Prisma Studio: http://localhost:5555"
 echo ""
-echo "📱 URLs:"
-echo "- Frontend: http://localhost:3000"
-echo "- Backend: http://localhost:5000"
-echo "- API Docs: http://localhost:5000/api/docs" 
+echo "🌐 Opening browsers automatically..."
+
+# Open browsers for the main services (Prisma Studio opens automatically)
+if command -v open &> /dev/null; then
+    # macOS
+    sleep 2 && open http://localhost:3000 &
+    sleep 3 && open http://localhost:5000/api/docs &
+elif command -v xdg-open &> /dev/null; then
+    # Linux
+    sleep 2 && xdg-open http://localhost:3000 &
+    sleep 3 && xdg-open http://localhost:5000/api/docs &
+elif command -v start &> /dev/null; then
+    # Windows
+    sleep 2 && start http://localhost:3000 &
+    sleep 3 && start http://localhost:5000/api/docs &
+else
+    echo "⚠️  Could not automatically open browsers. Please open manually:"
+    echo "   Frontend: http://localhost:3000"
+    echo "   API Docs: http://localhost:5000/api/docs"
+    echo "   Prisma Studio: http://localhost:5555 (opens automatically)"
+fi
+
+echo ""
+echo "📋 Process IDs (for stopping services):"
+echo "- API: $API_PID"
+echo "- Web: $WEB_PID"
+echo "- Prisma Studio: $PRISMA_PID"
+echo ""
+echo "📄 Log files:"
+echo "- API logs: api.log"
+echo "- Web logs: web.log"
+echo "- Prisma Studio logs: prisma-studio.log"
+echo ""
+echo "🛑 To stop all services:"
+echo "kill $API_PID $WEB_PID $PRISMA_PID"
+echo ""
+echo "💡 Tip: You can also use 'pnpm start:prod' from the root directory"
+echo ""
+echo "⚠️  Note: Turbopack was temporarily disabled to avoid startup issues."
+echo "   To re-enable it later, run: ./restore-turbopack.sh" 
