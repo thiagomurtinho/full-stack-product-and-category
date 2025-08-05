@@ -17,10 +17,31 @@ Key features include:
 - Validation with Zod
 - API documentation with Swagger
 - Modern UI with dialogs for create/edit, delete modals, and category filters
+- **Dedicated products page** with category tree path navigation
+- **Category path composition** showing full hierarchy in URLs
 
 ![Swagger API Documentation](https://github.com/thiagomurtinho/full-stack-product-and-category/raw/main/doc/img/swagger.png)
 
 ![Frontend Interface](https://github.com/thiagomurtinho/full-stack-product-and-category/raw/main/doc/img/page.png)
+
+### Dedicated Products Page with Category Tree Navigation
+
+The application features a dedicated products page that demonstrates the category tree path functionality. Users can navigate through the hierarchical category structure, and the URL dynamically composes the full path showing the complete category hierarchy.
+
+**Features:**
+- **Dynamic URL composition**: URLs reflect the complete category path (e.g., `/products/electronics/computers/laptops`)
+- **Breadcrumb navigation**: Shows the full category hierarchy in the URL path
+- **Category tree integration**: Seamless navigation through nested categories
+- **Responsive design**: Works across all device sizes
+
+![Frontend Product Screen](https://github.com/thiagomurtinho/full-stack-product-and-category/raw/main/doc/img/product-page.png)
+
+**Example URL Structure:**
+```
+/products/electronics/computers/laptops/gaming-laptops
+/products/electronics/smartphones/iphone
+/products/electronics/components/processors
+```
 
 ## 🚀 Quick Start
 
@@ -477,6 +498,8 @@ pnpm test         # Run tests
 - ✅ State management with React Query
 - ✅ Forms with React Hook Form
 - ✅ Tables with TanStack Table
+- ✅ **Dedicated products page with category tree navigation**
+- ✅ **Dynamic URL composition for category paths**
 
 ---
 

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react"
 import { productsApi } from "@/data/products/products.api"
-import { Product, CreateProduct, UpdateProduct } from "@/data/products/products.types"
+import { Product, CreateProduct, UpdateProduct, ProductWithCategories } from "@/data/products/products.types"
 import { DataTable } from "./data-table"
 import { createColumns } from "./columns"
 import { ProductDialog } from "./product-dialog"
@@ -103,9 +103,17 @@ export function ProductsTable({ initialProducts, selectedCategoryIds = [], isCat
     setDeletingProduct(product)
   }
 
+  const handleView = (product: ProductWithCategories) => {
+    // Build the URL based on the first category path
+    const categoryPath = product.categoryPaths[0] || 'products'
+    const url = `/products/${categoryPath}/${product.slug}`
+    window.open(url, '_blank')
+  }
+
   const columns = createColumns({
     onEdit: handleEdit,
     onDelete: handleDelete,
+    onView: handleView,
   })
 
   // Show error if there's one

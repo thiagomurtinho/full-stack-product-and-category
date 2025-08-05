@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { api } from '../shared/api'
-import { Product, CreateProduct, UpdateProduct, ProductCount, PaginatedProducts } from './products.types'
+import { Product, CreateProduct, UpdateProduct, ProductCount, PaginatedProducts, ProductWithCategories } from './products.types'
 import { 
   productSchema, 
   apiProductSchema,
@@ -79,9 +79,9 @@ export const productsApi = {
   /**
    * Fetches a product by its ID.
    * @param {string} id - The product ID
-   * @returns {Promise<Product>} The product data
+   * @returns {Promise<ProductWithCategories>} The product data with categories
    */
-  getById: async (id: string): Promise<Product> => {
+  getById: async (id: string): Promise<ProductWithCategories> => {
     const data = await api.get<any>(`/products/${id}`)
     return safeValidateApiResponse(data, apiProductWithCategoriesSchema, 'products.getById')
   },
@@ -89,11 +89,21 @@ export const productsApi = {
   /**
    * Fetches a product with its associated categories.
    * @param {string} id - The product ID
-   * @returns {Promise<Product>} The product data with categories
+   * @returns {Promise<ProductWithCategories>} The product data with categories
    */
-  getWithCategories: async (id: string): Promise<Product> => {
+  getWithCategories: async (id: string): Promise<ProductWithCategories> => {
     const data = await api.get<any>(`/products/${id}/with-categories`)
     return safeValidateApiResponse(data, apiProductWithCategoriesSchema, 'products.getWithCategories')
+  },
+
+  /**
+   * Fetches a product by its slug.
+   * @param {string} slug - The product slug
+   * @returns {Promise<ProductWithCategories>} The product data with categories
+   */
+  getBySlug: async (slug: string): Promise<ProductWithCategories> => {
+    const data = await api.get<any>(`/products/slug/${slug}`)
+    return safeValidateApiResponse(data, apiProductWithCategoriesSchema, 'products.getBySlug')
   },
 
   /**

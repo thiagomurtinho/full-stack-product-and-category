@@ -1,26 +1,39 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react"
+import { Pencil, Trash2, ExternalLink } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Product } from "@/data/products/products.types"
+
+import { Product, ProductWithCategories } from "@/data/products/products.types"
 
 interface ColumnsProps {
   onEdit: (product: Product) => void
   onDelete: (product: Product) => void
+  onView: (product: ProductWithCategories) => void
 }
 
-export const createColumns = ({ onEdit, onDelete }: ColumnsProps): ColumnDef<Product>[] => [
+export const createColumns = ({ onEdit, onDelete, onView }: ColumnsProps): ColumnDef<ProductWithCategories>[] => [
   {
     accessorKey: "name",
     header: "Name",
+    cell: ({ row }) => {
+      const product = row.original as ProductWithCategories
+      // Use the most specific (longest) category path as the URL path
+      const categoryPath = product.categoryPaths
+        .sort((a, b) => b.length - a.length)[0] || 'products'
+      const url = `/products/${categoryPath}/${product.slug}`
+      
+      return (
+        <button
+          onClick={() => window.open(url, '_blank')}
+          className="text-left hover:underline hover:text-blue-600 cursor-pointer font-medium transition-colors"
+          title={`View details for ${product.name}`}
+        >
+          {product.name}
+        </button>
+      )
+    },
   },
   {
     accessorKey: "description",
@@ -61,33 +74,43 @@ export const createColumns = ({ onEdit, onDelete }: ColumnsProps): ColumnDef<Pro
   },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => {
       const product = row.original
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => onEdit(product)}
-            >
-              <Pencil className="mr-2 h-4 w-4" />
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => onDelete(product)}
-              className="text-destructive"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onView(product)}
+            className="h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
+            title="View details"
+          >
+            <ExternalLink className="h-4 w-4" />
+            <span className="sr-only">View details</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onEdit(product)}
+            className="h-8 w-8 p-0 hover:bg-orange-50 hover:text-orange-600"
+            title="Edit product"
+          >
+            <Pencil className="h-4 w-4" />
+            <span className="sr-only">Edit product</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onDelete(product)}
+            className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+            title="Delete product"
+          >
+            <Trash2 className="h-4 w-4" />
+            <span className="sr-only">Delete product</span>
+          </Button>
+        </div>
       )
     },
   },
