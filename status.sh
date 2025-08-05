@@ -68,5 +68,5 @@ else
 fi
 
 echo ""
-echo "🛑 To stop all services: ./stop-services.sh"
-echo "🚀 To start all services: ./setup.sh" 
+echo "🛑 To stop all services: bash stop-services.sh"
+echo "🚀 To start all services: bash setup.sh" 
