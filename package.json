@@ -18,8 +18,18 @@
     "db:reset": "pnpm --filter api db:reset",
     "docker:up": "docker-compose up -d postgres",
     "docker:down": "docker-compose down",
-    "setup": "./setup.sh",
-    "start": "pnpm dev"
+    "setup": "bash setup.sh",
+    "start": "pnpm dev",
+    "start:prod": "bash setup.sh && bash status.sh",
+    "stop": "bash stop-services.sh",
+    "status": "bash status.sh",
+    "restore-turbopack": "bash restore-turbopack.sh",
+    "logs": "echo '📄 Log files:' && ls -la *.log 2>/dev/null || echo 'No log files found'",
+    "logs:api": "tail -f api.log",
+    "logs:web": "tail -f web.log",
+    "logs:prisma": "tail -f prisma-studio.log",
+    "clean": "rm -f *.log && echo '✅ Log files cleaned'",
+    "restart": "bash stop-services.sh && sleep 2 && bash setup.sh"
   },
   "keywords": [
     "full-stack",
