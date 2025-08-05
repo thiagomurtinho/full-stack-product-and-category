@@ -15,7 +15,7 @@ else
 fi
 
 # Kill processes on port 5000 (API)
-API_PID=$(lsof -ti:5000)
+API_PID=$(lsof -ti:5005)
 if [ ! -z "$API_PID" ]; then
     echo "🛑 Stopping API server (PID: $API_PID)..."
     kill $API_PID

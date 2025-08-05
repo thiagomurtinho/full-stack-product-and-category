@@ -4,7 +4,7 @@ import { z } from 'zod'
  * Base URL for the backend API.
  * Points to the local development server.
  */
-export const API_BASE_URL = 'http://localhost:5000/api'
+export const API_BASE_URL = 'http://localhost:5005/api'
 
 /**
  * Generic API request function that handles HTTP requests to the backend.

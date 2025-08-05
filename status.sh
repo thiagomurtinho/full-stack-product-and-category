@@ -15,10 +15,10 @@ echo ""
 
 # Check API server
 echo "🔧 API Server:"
-API_PID=$(lsof -ti:5000)
+API_PID=$(lsof -ti:5005)
 if [ ! -z "$API_PID" ]; then
     echo "✅ Running on port 5000 (PID: $API_PID)"
-    echo "   📚 API Docs: http://localhost:5000/api/docs"
+    echo "   📚 API Docs: http://localhost:5005/api/docs"
 else
     echo "❌ Not running on port 5000"
 fi

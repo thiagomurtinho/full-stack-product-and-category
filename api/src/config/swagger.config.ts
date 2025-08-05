@@ -45,7 +45,7 @@ RESTful API for products and categories management with Functional Core / Impera
   },
   servers: [
     {
-      url: 'http://localhost:5000',
+      url: 'http://localhost:5005',
       description: 'Development server'
     },
     {

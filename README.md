@@ -71,7 +71,7 @@ This will automatically:
 
 Example API Request:
 ```bash
-curl -X GET http://localhost:5000/api/categories
+curl -X GET http://localhost:5005/api/categories
 ```
 
 Example Response:
@@ -124,7 +124,7 @@ The application features a dedicated products page that demonstrates the categor
 
 Example API Request:
 ```bash
-curl -X GET http://localhost:5000/api/categories/path/gaming-laptops
+curl -X GET http://localhost:5005/api/categories/path/gaming-laptops
 ```
 
 Example Response:
@@ -313,13 +313,13 @@ pnpm start:prod
 - ✅ Start Prisma Studio for database management
 - ✅ Open browsers automatically for:
   - 🌐 Frontend: http://localhost:3000
-  - 📚 API Docs: http://localhost:5000/api/docs
+  - 📚 API Docs: http://localhost:5005/api/docs
   - 🗄️ Prisma Studio: http://localhost:5555 (opens automatically)
 
 **Services will be available at:**
 - 🌐 Frontend: http://localhost:3000
-- 🔧 Backend: http://localhost:5000
-- 📚 API Docs: http://localhost:5000/api/docs
+- 🔧 Backend: http://localhost:5005
+- 📚 API Docs: http://localhost:5005/api/docs
 - 🗄️ Prisma Studio: http://localhost:5555
 
 ### Option 2: Alternative Setup Methods
@@ -352,9 +352,9 @@ pnpm dev
 ```
 
 **Services will be available at:**
-- Backend: http://localhost:5000
+- Backend: http://localhost:5005
 - Frontend: http://localhost:3000
-- API Documentation: http://localhost:5000/api/docs
+- API Documentation: http://localhost:5005/api/docs
 - Prisma Studio: http://localhost:5555
 
 ---

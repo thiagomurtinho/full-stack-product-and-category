@@ -98,8 +98,8 @@ echo "✅ All services started successfully!"
 echo ""
 echo "📱 Service URLs:"
 echo "- 🌐 Frontend (Production): http://localhost:3000"
-echo "- 🔧 Backend (Production): http://localhost:5000"
-echo "- 📚 API Documentation: http://localhost:5000/api/docs"
+echo "- 🔧 Backend (Production): http://localhost:5005"
+echo "- 📚 API Documentation: http://localhost:5005/api/docs"
 echo "- 🗄️ Prisma Studio: http://localhost:5555"
 echo ""
 echo "🌐 Opening browsers automatically..."
@@ -108,19 +108,19 @@ echo "🌐 Opening browsers automatically..."
 if command -v open &> /dev/null; then
     # macOS
     sleep 2 && open http://localhost:3000 &
-    sleep 3 && open http://localhost:5000/api/docs &
+    sleep 3 && open http://localhost:5005/api/docs &
 elif command -v xdg-open &> /dev/null; then
     # Linux
     sleep 2 && xdg-open http://localhost:3000 &
-    sleep 3 && xdg-open http://localhost:5000/api/docs &
+    sleep 3 && xdg-open http://localhost:5005/api/docs &
 elif command -v start &> /dev/null; then
     # Windows
     sleep 2 && start http://localhost:3000 &
-    sleep 3 && start http://localhost:5000/api/docs &
+    sleep 3 && start http://localhost:5005/api/docs &
 else
     echo "⚠️  Could not automatically open browsers. Please open manually:"
     echo "   Frontend: http://localhost:3000"
-    echo "   API Docs: http://localhost:5000/api/docs"
+    echo "   API Docs: http://localhost:5005/api/docs"
     echo "   Prisma Studio: http://localhost:5555 (opens automatically)"
 fi
 

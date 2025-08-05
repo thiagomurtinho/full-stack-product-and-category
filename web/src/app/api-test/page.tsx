@@ -41,7 +41,7 @@ function TestResults({ data }: { data: any }) {
         <h2 className="text-lg font-semibold text-red-800 mb-2">❌ API Connection Failed</h2>
         <p className="text-red-600">{data.error}</p>
         <p className="text-sm text-red-500 mt-2">
-          Make sure the backend is running on http://localhost:5000
+          Make sure the backend is running on http://localhost:5005
         </p>
       </div>
     )
