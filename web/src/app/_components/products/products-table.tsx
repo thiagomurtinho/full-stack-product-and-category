@@ -107,6 +107,7 @@ export function ProductsTable({ initialProducts, selectedCategoryIds = [], isCat
     // Build the URL based on the first category path
     const categoryPath = product.categoryPaths[0] || 'products'
     const url = `/products/${categoryPath}/${product.slug}`
+    
     window.open(url, '_blank')
   }
 

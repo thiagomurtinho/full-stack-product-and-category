@@ -2,12 +2,9 @@ import { z } from 'zod'
 import { api } from '../shared/api'
 import { Product, CreateProduct, UpdateProduct, ProductCount, PaginatedProducts, ProductWithCategories } from './products.types'
 import { 
-  productSchema, 
-  apiProductSchema,
   apiProductWithCategoriesSchema,
   createProductSchema, 
   updateProductSchema, 
-  productWithCategoriesSchema 
 } from './products.contract'
 import { validateApiResponse, safeValidateApiResponse } from '../shared/error-handling'
 
