@@ -20,6 +20,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+api.log
+web.log
+prisma-studio.log
 
 # Runtime data
 pids
@@ -107,3 +110,10 @@ prisma/migrations/
 # Cursor
 .cursor/
 .cursorignore
+
+# Backup files
+*.backup
+*.bak
+
+# Conflicting lockfiles
+web/pnpm-lock.yaml
