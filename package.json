@@ -1,48 +1,23 @@
 {
   "name": "full-stack-product-and-category",
-  "version": "1.0.0",
-  "description": "Full Stack Product and Category - Interview Challenge",
   "private": true,
   "scripts": {
-    "dev": "pnpm --parallel dev",
-    "dev:api": "pnpm --filter api dev",
-    "dev:web": "pnpm --filter web dev",
-    "build": "pnpm --recursive build",
-    "build:api": "pnpm --filter api build",
-    "build:web": "pnpm --filter web build",
-    "test": "pnpm --recursive test",
-    "test:api": "pnpm --filter api test",
-    "test:web": "pnpm --filter web test",
-    "install:all": "pnpm install",
-    "db:setup": "pnpm --filter api db:generate && pnpm --filter api db:reset",
-    "db:reset": "pnpm --filter api db:reset",
-    "docker:up": "docker-compose up -d postgres",
-    "docker:down": "docker-compose down",
-    "setup": "bash setup.sh",
-    "start": "pnpm dev",
-    "start:prod": "bash setup.sh && bash status.sh",
-    "stop": "bash stop-services.sh",
-    "status": "bash status.sh",
-    "restore-turbopack": "bash restore-turbopack.sh",
-    "logs": "echo '📄 Log files:' && ls -la *.log 2>/dev/null || echo 'No log files found'",
-    "logs:api": "tail -f api.log",
-    "logs:web": "tail -f web.log",
-    "logs:prisma": "tail -f prisma-studio.log",
-    "clean": "rm -f *.log && echo '✅ Log files cleaned'",
-    "restart": "bash stop-services.sh && sleep 2 && bash setup.sh"
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start"
   },
-  "keywords": [
-    "full-stack",
-    "express",
-    "nextjs",
-    "typescript",
-    "prisma",
-    "postgresql",
-    "interview"
-  ],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.10.0"
-  }
-} 
+    "turbo": "^2.5.5",
+    "typescript": "5.8.3",
+    "open": "^9.1.0",
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "npm@10.9.2",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
