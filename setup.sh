@@ -8,19 +8,20 @@ if ! docker info > /dev/null 2>&1; then
     exit 1
 fi
 
-# Check if pnpm is installed
-if ! command -v pnpm &> /dev/null; then
-    echo "❌ pnpm is not installed. Installing..."
-    npm install -g pnpm
+# Check if npm is installed
+if ! command -v npm &> /dev/null; then
+    echo "❌ npm is not installed. Please install Node.js and npm."
+    exit 1
 fi
 
 echo "🧹 Cleaning up conflicting lockfiles..."
 # Remove conflicting lockfiles that might cause issues
-rm -f web/pnpm-lock.yaml
-rm -f pnpm-lock.yaml
+rm -f web/package-lock.json
+rm -f api/package-lock.json
+rm -f package-lock.json
 
 echo "📦 Installing workspace dependencies..."
-pnpm install
+npm install
 
 echo "🐘 Starting database..."
 docker-compose up -d postgres
@@ -38,13 +39,13 @@ fi
 
 # Generate Prisma client and populate database
 echo "🔧 Generating Prisma client..."
-pnpm db:generate
+npm run db:generate
 
 echo "🌱 Resetting and seeding database..."
-pnpm db:reset
+npm run db:reset
 
 echo "🏗️ Building API for production..."
-pnpm build
+npm run build
 
 cd ..
 
@@ -63,7 +64,7 @@ if [ -f package.json ]; then
 fi
 
 echo "🏗️ Building Next.js application..."
-pnpm build
+npm run build
 
 cd ..
 
@@ -72,21 +73,21 @@ echo "🚀 Starting all services in production mode..."
 # Start API in production mode
 echo "🔧 Starting API server in production mode..."
 cd api
-nohup pnpm start:prod > ../api.log 2>&1 &
+nohup npm run start:prod > ../api.log 2>&1 &
 API_PID=$!
 cd ..
 
 # Start Web in production mode
 echo "🌐 Starting Web server in production mode..."
 cd web
-nohup pnpm start > ../web.log 2>&1 &
+nohup npm run start > ../web.log 2>&1 &
 WEB_PID=$!
 cd ..
 
 # Start Prisma Studio
 echo "🗄️ Starting Prisma Studio..."
 cd api
-nohup pnpm prisma studio > ../prisma-studio.log 2>&1 &
+nohup npx prisma studio > ../prisma-studio.log 2>&1 &
 PRISMA_PID=$!
 cd ..
 
@@ -138,7 +139,7 @@ echo ""
 echo "🛑 To stop all services:"
 echo "kill $API_PID $WEB_PID $PRISMA_PID"
 echo ""
-echo "💡 Tip: You can also use 'pnpm start:prod' from the root directory"
+echo "💡 Tip: You can also use 'npm run start:prod' from the root directory"
 echo ""
 echo "⚠️  Note: Turbopack was temporarily disabled to avoid startup issues."
 echo "   To re-enable it later, run: bash restore-turbopack.sh" 

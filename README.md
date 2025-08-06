@@ -27,10 +27,10 @@ Key features include:
 ## 🚀 Quick Start
 
 ```bash
-# Clone and start everything in production mode
+# Clone and start everything in interactive development mode (RECOMMENDED)
 git clone <your-repository>
 cd full-stack-product-and-category
-pnpm start:prod
+npm run dev:interactive
 ```
 
 This will automatically:
@@ -38,7 +38,9 @@ This will automatically:
 - ✅ Start PostgreSQL database
 - ✅ Setup and seed the database
 - ✅ Build and start all services
+- ✅ Show real-time logs
 - ✅ Open browsers for Frontend, API Docs, and Prisma Studio
+- ✅ **Press Ctrl+C to stop all services**
 
 ---
 
@@ -292,29 +294,26 @@ This approach leverages PostgreSQL's `pg_trgm` extension for efficient and accur
 
 - Node.js 18+ 
 - Docker and Docker Compose
-- pnpm (recommended) or npm
+- npm (package manager)
 
-### Option 1: Production Setup (Recommended)
+### Option 1: Interactive Development Mode (RECOMMENDED)
 
 ```bash
 git clone <your-repository>
 cd full-stack-product-and-category
 
-# Run complete production setup
-pnpm start:prod
+# Start in interactive mode with real-time logs
+npm run dev:interactive
 ```
 
 **This will automatically:**
 - ✅ Install all dependencies
 - ✅ Start PostgreSQL database
 - ✅ Setup and seed the database
-- ✅ Build API and Web for production (ignoring ESLint warnings)
-- ✅ Start all services in production mode
-- ✅ Start Prisma Studio for database management
-- ✅ Open browsers automatically for:
-  - 🌐 Frontend: http://localhost:3000
-  - 📚 API Docs: http://localhost:5005/api/docs
-  - 🗄️ Prisma Studio: http://localhost:5555 (opens automatically)
+- ✅ Build API and Web for production
+- ✅ Start all services with real-time logs
+- ✅ Open browsers automatically
+- ✅ **Press Ctrl+C to stop all services**
 
 **Services will be available at:**
 - 🌐 Frontend: http://localhost:3000
@@ -322,14 +321,42 @@ pnpm start:prod
 - 📚 API Docs: http://localhost:5005/api/docs
 - 🗄️ Prisma Studio: http://localhost:5555
 
-### Option 2: Alternative Setup Methods
+### Option 2: Production Setup
+
+```bash
+git clone <your-repository>
+cd full-stack-product-and-category
+
+# Run complete production setup (background mode)
+npm run start:prod
+```
+
+**This will automatically:**
+- ✅ Install all dependencies
+- ✅ Start PostgreSQL database
+- ✅ Setup and seed the database
+- ✅ Build API and Web for production
+- ✅ Start all services in background mode
+- ✅ Start Prisma Studio for database management
+- ✅ Open browsers automatically
+
+**Services will be available at:**
+- 🌐 Frontend: http://localhost:3000
+- 🔧 Backend: http://localhost:5005
+- 📚 API Docs: http://localhost:5005/api/docs
+- 🗄️ Prisma Studio: http://localhost:5555
+
+### Option 3: Alternative Setup Methods
 
 #### Method A: Using bash scripts directly
 ```bash
 git clone <your-repository>
 cd full-stack-product-and-category
 
-# Run complete production setup
+# Interactive mode (development)
+bash setup-interactive.sh
+
+# Production mode
 bash setup.sh
 ```
 
@@ -339,16 +366,16 @@ git clone <your-repository>
 cd full-stack-product-and-category
 
 # Install all workspace dependencies
-pnpm install
+npm install
 
 # Start database
 docker-compose up -d postgres
 
 # Setup database with sample data
-pnpm db:setup
+npm run db:setup
 
 # Start development servers
-pnpm dev
+npm run dev
 ```
 
 **Services will be available at:**
@@ -379,81 +406,96 @@ The project is configured to build successfully even with ESLint warnings and Ty
 
 ## 🔧 Useful Scripts
 
-### Production Scripts (Recommended)
+### Development Scripts (RECOMMENDED)
 ```bash
-# Primary commands (using pnpm)
-pnpm start:prod         # Complete production setup and start all services
-pnpm stop               # Stop all running services
-pnpm status             # Check status of all services
-pnpm restart            # Restart all services
+# 🚀 Interactive Development (NEW)
+npm run dev:interactive    # Start with real-time logs and Ctrl+C to stop
+npm run dev:foreground     # Alternative command for interactive mode
+
+# 🏭 Production
+npm run start:prod         # Complete production setup and start all services
+npm run stop               # Stop all running services
+npm run status             # Check status of all services
+npm run restart            # Restart all services
 
 # Alternative commands (using bash scripts directly)
-bash setup.sh              # Complete production setup and start all services
-bash stop-services.sh      # Stop all running services
+bash setup-interactive.sh  # Interactive development mode
+bash setup.sh              # Production setup
+bash stop-all.sh           # Stop all services
 bash status.sh             # Check status of all services
-bash restore-turbopack.sh  # Restore Turbopack for development
 ```
 
 ### Package.json Commands (from root)
 ```bash
-pnpm start:prod         # Start all services in production mode
-pnpm stop               # Stop all running services
-pnpm status             # Check status of all services
-pnpm restart            # Restart all services
-pnpm logs               # List log files
-pnpm logs:api           # Follow API logs
-pnpm logs:web           # Follow Web logs
-pnpm logs:prisma        # Follow Prisma Studio logs
-pnpm clean              # Clean log files
-pnpm restore-turbopack  # Restore Turbopack for development
+# 🚀 Development (Interactive)
+npm run dev:interactive    # Start with real-time logs and Ctrl+C to stop
+npm run dev:foreground     # Alternative command
+
+# 🏭 Production
+npm run start:prod         # Start all services in production mode
+npm run stop               # Stop all running services
+npm run status             # Check status of all services
+npm run restart            # Restart all services
+
+# 📄 Logs & Maintenance
+npm run logs               # List log files
+npm run logs:api           # Follow API logs
+npm run logs:web           # Follow Web logs
+npm run logs:prisma        # Follow Prisma Studio logs
+npm run clean              # Clean log files
+npm run restore-turbopack  # Restore Turbopack for development
 ```
 
 ### Workspace Commands (from root)
 ```bash
-# 🚀 Production (Recommended)
-pnpm start:prod   # Start all services in production mode
-pnpm stop         # Stop all running services
-pnpm status       # Check status of all services
-pnpm restart      # Restart all services
+# 🚀 Development (Interactive)
+npm run dev:interactive    # Start with real-time logs and Ctrl+C to stop
+npm run dev:foreground     # Alternative command
+
+# 🏭 Production
+npm run start:prod         # Start all services in production mode
+npm run stop               # Stop all running services
+npm run status             # Check status of all services
+npm run restart            # Restart all services
 
 # 🔧 Development
-pnpm dev          # Start both backend and frontend (development)
-pnpm dev:api      # Start backend only (development)
-pnpm dev:web      # Start frontend only (development)
+npm run dev                # Start both backend and frontend (development)
+npm run dev:api            # Start backend only (development)
+npm run dev:web            # Start frontend only (development)
 
 # 🏗️ Build & Test
-pnpm build        # Build all packages
-pnpm test         # Run all tests
+npm run build              # Build all packages
+npm run test               # Run all tests
 
 # 🗄️ Database
-pnpm db:setup     # Setup database with sample data
-pnpm docker:up    # Start database
-pnpm docker:down  # Stop database
+npm run db:setup           # Setup database with sample data
+npm run docker:up          # Start database
+npm run docker:down        # Stop database
 
 # 📄 Logs & Maintenance
-pnpm logs         # List log files
-pnpm logs:api     # Follow API logs
-pnpm logs:web     # Follow Web logs
-pnpm logs:prisma  # Follow Prisma Studio logs
-pnpm clean        # Clean log files
-pnpm restore-turbopack  # Restore Turbopack for development
+npm run logs               # List log files
+npm run logs:api           # Follow API logs
+npm run logs:web           # Follow Web logs
+npm run logs:prisma        # Follow Prisma Studio logs
+npm run clean              # Clean log files
+npm run restore-turbopack  # Restore Turbopack for development
 ```
 
 ### Backend (api/)
 ```bash
-pnpm dev          # Development
-pnpm build        # Build for production
-pnpm start        # Production
-pnpm test         # Run tests
-pnpm db:reset     # Reset database + seeds
+npm run dev                # Development
+npm run build              # Build for production
+npm run start              # Production
+npm run test               # Run tests
+npm run db:reset           # Reset database + seeds
 ```
 
 ### Frontend (web/)
 ```bash
-pnpm dev          # Development
-pnpm build        # Build for production
-pnpm start        # Production
-pnpm test         # Run tests
+npm run dev                # Development
+npm run build              # Build for production
+npm run start              # Production
+npm run test               # Run tests
 ```
 
 ---
@@ -501,6 +543,7 @@ pnpm test         # Run tests
 - ✅ Tables with TanStack Table
 - ✅ **Dedicated products page with category tree navigation**
 - ✅ **Dynamic URL composition for category paths**
+- ✅ **Interactive development mode with real-time logs**
 
 ---
 
@@ -536,6 +579,7 @@ This project demonstrates:
 3. **Best practices** in modern full-stack development
 4. **Responsive and user-friendly interface**
 5. **Complete API documentation**
-6. **Simple and efficient setup** with Docker and pnpm workspace
+6. **Simple and efficient setup** with Docker and npm workspaces
+7. **Interactive development mode** with real-time logs and easy service control
 
 The project is designed to showcase robust development practices and is ready to run with the provided setup instructions.
