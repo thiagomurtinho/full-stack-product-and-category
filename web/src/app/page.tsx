@@ -23,10 +23,17 @@ async function getCategories() {
 }
 
 export default async function HomePage() {
-  const [products, categories] = await Promise.all([
-    getProducts(),
-    getCategories()
-  ])
+  let products = []
+  let categories = []
+
+  try {
+    [products, categories] = await Promise.all([
+      getProducts(),
+      getCategories()
+    ])
+  } catch (error) {
+    console.error("Error fetching initial data:", error)
+  }
 
   return (
     <Suspense fallback={
