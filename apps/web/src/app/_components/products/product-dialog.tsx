@@ -44,7 +44,7 @@ export function ProductDialog({ product, onSubmit, trigger }: ProductDialogProps
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {<>{trigger}</> || (
+        {trigger || (
           <Button>
             <Plus className="mr-2 h-4 w-4" />
             Add Product
