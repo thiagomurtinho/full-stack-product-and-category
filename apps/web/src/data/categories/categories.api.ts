@@ -98,9 +98,9 @@ export const categoriesApi = {
     })
     const [response, error] = await api.put<any>(`/categories/${id}`, validatedData)
     
-    // if (error) {
-    //   throw error
-    // }
+    if (error) {
+      throw error
+    }
     
     return safeValidateApiResponse(response, apiCategorySchema, 'categories.update response')
   },
