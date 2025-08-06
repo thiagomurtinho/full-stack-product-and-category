@@ -31,7 +31,7 @@ export function useDebouncedCategoryFilter({
     const safeCategoryIds = Array.isArray(debouncedCategoryIds) ? debouncedCategoryIds : []
     
     // Set pending state when categories are being changed
-    if (JSON.stringify(safeCategoryIds) !== JSON.stringify(selectedCategoryIds)) {
+    if (!areArraysEqual(safeCategoryIds, selectedCategoryIds)) {
       setIsPending(true)
       
       // Call the category change callback
