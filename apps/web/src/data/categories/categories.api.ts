@@ -27,9 +27,9 @@ export const categoriesApi = {
     const queryParams = params ? `?${new URLSearchParams(params as any)}` : ''
     const [data, error] = await api.get<any[]>(`/categories${queryParams}`)
     
-    // if (error) {
-    //   throw error
-    // }
+    if (error) {
+      throw error
+    }
     
     return data?.map(item => safeValidateApiResponse(item, apiCategorySchema, 'categories.getAll')) || []
   },
