@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -10,29 +9,29 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
-import { ProductForm } from "./product-form"
-import { CreateProduct } from "@/data/products/products.types"
+import { ProductEditForm } from "./product-edit-form"
+import { UpdateProduct, ProductWithCategories } from "@/data/products/products.types"
 import { Category } from "@/data/categories/categories.types"
 
-interface ProductDialogProps {
+interface ProductEditDialogProps {
+  product: ProductWithCategories
   categories: Category[]
-  onSubmit: (data: CreateProduct) => Promise<void>
-  trigger?: React.ReactNode
+  onSubmit: (data: UpdateProduct) => Promise<void>
+  onClose?: () => void
 }
 
-export function ProductDialog({ categories, onSubmit, trigger }: ProductDialogProps) {
-  const [open, setOpen] = useState(false)
+export function ProductEditDialog({ product, categories, onSubmit, onClose }: ProductEditDialogProps) {
+  const [open, setOpen] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (data: CreateProduct) => {
+  const handleSubmit = async (data: UpdateProduct) => {
     try {
       setIsLoading(true)
       await onSubmit(data)
       setOpen(false)
     } catch (error) {
-      console.error("Error creating product:", error)
+      console.error("Error updating product:", error)
     } finally {
       setIsLoading(false)
     }
@@ -46,27 +45,23 @@ export function ProductDialog({ categories, onSubmit, trigger }: ProductDialogPr
     // Only allow closing if not loading
     if (!isLoading) {
       setOpen(newOpen)
+      if (!newOpen && onClose) {
+        onClose()
+      }
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button onClick={() => setOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Product
-          </Button>
-        )}
-      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create New Product</DialogTitle>
+          <DialogTitle>Edit Product</DialogTitle>
           <DialogDescription>
-            Fill in the information for the new product.
+            Make the necessary changes to the product.
           </DialogDescription>
         </DialogHeader>
-        <ProductForm
+        <ProductEditForm
+          product={product}
           categories={categories}
           onSubmit={handleSubmit}
           onCancel={handleCancel}

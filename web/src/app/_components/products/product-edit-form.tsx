@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -15,11 +16,11 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { CreateProduct } from "@/data/products/products.types"
+import { UpdateProduct, ProductWithCategories } from "@/data/products/products.types"
 import { Category } from "@/data/categories/categories.types"
 import { CategoryTree } from "../categories/category-tree"
 
-const productFormSchema = z.object({
+const productEditFormSchema = z.object({
   name: z.string().min(1, "Name is required").max(200, "Name must have a maximum of 200 characters"),
   description: z.string().max(1000, "Description must have a maximum of 1000 characters").optional(),
   price: z.string().min(1, "Price is required").refine((val) => {
@@ -27,52 +28,50 @@ const productFormSchema = z.object({
     return !isNaN(num) && num > 0
   }, "Price must be a positive number"),
   imageUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
-  categoryIds: z.array(z.string()).min(1, "At least one category is required"),
+  categoryIds: z.array(z.string()),
 })
 
-// Function to generate slug based on name
-function generateSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // Remove accents
-    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .replace(/-+/g, '-') // Remove duplicate hyphens
-    .replace(/^-|-$/g, '') // Remove hyphens at beginning and end
-}
+type ProductEditFormValues = z.infer<typeof productEditFormSchema>
 
-type ProductFormValues = z.infer<typeof productFormSchema>
-
-interface ProductFormProps {
+interface ProductEditFormProps {
+  product: ProductWithCategories
   categories: Category[]
-  onSubmit: (data: CreateProduct) => void
+  onSubmit: (data: UpdateProduct) => void
   onCancel: () => void
   isLoading?: boolean
 }
 
-export function ProductForm({ categories, onSubmit, onCancel, isLoading = false }: ProductFormProps) {
-  const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productFormSchema),
+export function ProductEditForm({ product, categories, onSubmit, onCancel, isLoading = false }: ProductEditFormProps) {
+  const form = useForm<ProductEditFormValues>({
+    resolver: zodResolver(productEditFormSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      price: "",
-      imageUrl: "",
-      categoryIds: [],
+      name: product.name || "",
+      description: product.description || "",
+      price: product.price?.toString() || "",
+      imageUrl: product.imageUrl || "",
+      categoryIds: product.categoryIds || [],
     },
   })
 
-  const handleSubmit = (data: ProductFormValues) => {
-    const createData: CreateProduct = {
+  // Reset form when product changes
+  useEffect(() => {
+    form.reset({
+      name: product.name || "",
+      description: product.description || "",
+      price: product.price?.toString() || "",
+      imageUrl: product.imageUrl || "",
+      categoryIds: product.categoryIds || [],
+    })
+  }, [product])
+
+  const handleSubmit = (data: ProductEditFormValues) => {
+    const updateData: UpdateProduct = {
       name: data.name,
-      slug: generateSlug(data.name),
       price: parseFloat(data.price),
-      categoryIds: data.categoryIds,
-      description: data.description,
       imageUrl: data.imageUrl || undefined,
+      description: data.description,
     }
-    onSubmit(createData)
+    onSubmit(updateData)
   }
 
   const handleCategorySelectionChange = (selectedIds: string[]) => {
@@ -176,7 +175,7 @@ export function ProductForm({ categories, onSubmit, onCancel, isLoading = false 
             Cancel
           </Button>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Saving..." : "Create"}
+            {isLoading ? "Saving..." : "Update"}
           </Button>
         </div>
       </form>
