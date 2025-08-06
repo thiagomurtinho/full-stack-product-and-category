@@ -127,9 +127,9 @@ export const categoriesApi = {
   count: async (): Promise<{ count: number }> => {
     const [data, error] = await api.get<any>('/categories/count')
     
-    // if (error) {
-    //   throw error
-    // }
+    if (error) {
+      throw error
+    }
     
     return safeValidateApiResponse(data, z.object({ count: z.number() }), 'categories.count')
   },
