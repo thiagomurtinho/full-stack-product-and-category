@@ -42,9 +42,9 @@ export const categoriesApi = {
   getById: async (id: string): Promise<Category> => {
     const [data, error] = await api.get<any>(`/categories/${id}`)
     
-    // if (error) {
-    //   throw error
-    // }
+    if (error) {
+      throw error
+    }
     
     return safeValidateApiResponse(data, apiCategorySchema, 'categories.getById')
   },
