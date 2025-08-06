@@ -2,7 +2,8 @@
 
 import * as React from "react"
 import { Input } from "@/components/ui/input"
-import { useDebouncedCallback } from "@/lib/hooks/use-debounce"
+import { Button } from "@/components/ui/button"
+import { Search, X } from "lucide-react"
 
 interface SearchInputProps {
   onSearchChange: (search: string) => void
@@ -19,59 +20,70 @@ export function SearchInput({
 }: SearchInputProps) {
   const [searchValue, setSearchValue] = React.useState("")
   const searchInputRef = React.useRef<HTMLInputElement>(null)
-  const [shouldMaintainFocus, setShouldMaintainFocus] = React.useState(false)
   
-  // Debounced search callback
-  const debouncedSearch = useDebouncedCallback(
-    (value: string) => {
-      onSearchChange(value)
-    },
-    300 // 300ms delay
-  )
-  
-  // Track when user is typing to maintain focus
-  React.useEffect(() => {
-    if (searchValue.length > 0) {
-      setShouldMaintainFocus(true)
-    }
-  }, [searchValue])
-  
-  // Keep focus on search input during loading if user was typing
-  React.useEffect(() => {
-    if (isLoading && shouldMaintainFocus && searchInputRef.current) {
-      // Small delay to ensure the component has re-rendered
-      const timeoutId = setTimeout(() => {
-        if (searchInputRef.current) {
-          searchInputRef.current.focus()
-        }
-      }, 0)
-      
-      return () => clearTimeout(timeoutId)
-    }
-  }, [isLoading, shouldMaintainFocus])
-
-  // Handle search input with debounce
+  // Handle search input change
   const handleSearchChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setSearchValue(value) // Update local state immediately for UI responsiveness
     onSearchValueChange?.(value) // Notify parent of current value
-    debouncedSearch(value) // Debounced API call
-  }, [debouncedSearch, onSearchValueChange])
+  }, [onSearchValueChange])
   
-  // Handle search input blur
-  const handleSearchBlur = React.useCallback(() => {
-    setShouldMaintainFocus(false)
-  }, [])
+  // Handle search button click
+  const handleSearchClick = React.useCallback(() => {
+    onSearchChange(searchValue)
+  }, [onSearchChange, searchValue])
+  
+  // Handle clear button click
+  const handleClearClick = React.useCallback(() => {
+    setSearchValue("")
+    onSearchValueChange?.("")
+    onSearchChange("")
+    if (searchInputRef.current) {
+      searchInputRef.current.focus()
+    }
+  }, [onSearchChange, onSearchValueChange])
+  
+  // Handle Enter key press
+  const handleKeyPress = React.useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      onSearchChange(searchValue)
+    }
+  }, [onSearchChange, searchValue])
 
   return (
-    <Input
-      ref={searchInputRef}
-      placeholder={placeholder}
-      value={searchValue}
-      onChange={handleSearchChange}
-      onBlur={handleSearchBlur}
-      className="max-w-sm"
-      disabled={isLoading}
-    />
+    <div className="flex items-center gap-2 max-w-sm">
+      <div className="relative flex-1">
+        <Input
+          ref={searchInputRef}
+          placeholder={placeholder}
+          value={searchValue}
+          onChange={handleSearchChange}
+          onKeyPress={handleKeyPress}
+          className="pr-8"
+          disabled={isLoading}
+        />
+        {searchValue.length > 0 && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handleClearClick}
+            className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 p-0 hover:bg-gray-100"
+            disabled={isLoading}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
+      <Button
+        type="button"
+        onClick={handleSearchClick}
+        disabled={isLoading}
+        className="px-4"
+      >
+        <Search className="h-4 w-4 mr-2" />
+        Search
+      </Button>
+    </div>
   )
 } 
