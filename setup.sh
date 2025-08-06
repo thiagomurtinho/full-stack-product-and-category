@@ -1,111 +1,180 @@
 #!/bin/bash
 
-echo "🚀 Starting Full Stack Product and Category setup..."
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# Function to print colored output
+print_status() {
+    echo -e "${GREEN}✅${NC} $1"
+}
+
+print_info() {
+    echo -e "${BLUE}ℹ️${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}⚠️${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}❌${NC} $1"
+}
+
+print_header() {
+    echo -e "${CYAN}🚀${NC} $1"
+}
+
+print_service() {
+    echo -e "${PURPLE}🔧${NC} $1"
+}
+
+# Function to cleanup on exit
+cleanup() {
+    echo ""
+    print_warning "Stopping all services..."
+    
+    # Kill all background processes
+    if [ ! -z "$API_PID" ]; then
+        kill $API_PID 2>/dev/null
+        print_info "Stopped API server"
+    fi
+    
+    if [ ! -z "$WEB_PID" ]; then
+        kill $WEB_PID 2>/dev/null
+        print_info "Stopped Web server"
+    fi
+    
+    if [ ! -z "$PRISMA_PID" ]; then
+        kill $PRISMA_PID 2>/dev/null
+        print_info "Stopped Prisma Studio"
+    fi
+    
+    print_status "All services stopped"
+    echo ""
+    exit 0
+}
+
+# Set up signal handlers
+trap cleanup SIGINT SIGTERM
+
+echo ""
+print_header "Full Stack Product and Category - Development Mode"
+echo "========================================================"
+echo ""
 
 # Check if Docker is running
 if ! docker info > /dev/null 2>&1; then
-    echo "❌ Docker is not running. Please start Docker and try again."
+    print_error "Docker is not running. Please start Docker and try again."
     exit 1
 fi
 
 # Check if npm is installed
 if ! command -v npm &> /dev/null; then
-    echo "❌ npm is not installed. Please install Node.js and npm."
+    print_error "npm is not installed. Please install Node.js and npm."
     exit 1
 fi
 
-echo "🧹 Cleaning up conflicting lockfiles..."
-# Remove conflicting lockfiles that might cause issues
-rm -f web/package-lock.json
-rm -f api/package-lock.json
-rm -f package-lock.json
+print_info "Cleaning up conflicting lockfiles..."
+rm -f web/package-lock.json api/package-lock.json package-lock.json
 
-echo "📦 Installing workspace dependencies..."
+print_info "Installing workspace dependencies..."
 npm install
 
-echo "🐘 Starting database..."
+if [ $? -ne 0 ]; then
+    print_error "Failed to install dependencies"
+    exit 1
+fi
+print_status "Dependencies installed"
+
+print_info "Starting database..."
 docker-compose up -d postgres
 
-echo "⏳ Waiting for database to initialize..."
-sleep 10
+if [ $? -ne 0 ]; then
+    print_warning "Database might already be running"
+fi
 
-echo "🔧 Setting up database..."
+print_info "Waiting for database to initialize..."
+sleep 5
+
+print_info "Setting up database..."
 cd api
 
 # Create .env file if it doesn't exist
 if [ ! -f .env ]; then
     echo 'DATABASE_URL="postgresql://postgres:postgres@localhost:5432/fullstack_product_and_category"' > .env
+    print_status "Created .env file"
 fi
 
-# Generate Prisma client and populate database
-echo "🔧 Generating Prisma client..."
+print_info "Generating Prisma client..."
 npm run db:generate
 
-echo "🌱 Resetting and seeding database..."
+print_info "Resetting and seeding database..."
 npm run db:reset
 
-echo "🏗️ Building API for production..."
+print_info "Building API for production..."
 npm run build
 
 cd ..
 
-echo "🏗️ Building Web for production..."
+print_info "Building Web for production..."
 cd web
 
 # Temporarily disable Turbopack to avoid issues
 if [ -f package.json ]; then
-    # Create a backup of the original package.json
     cp package.json package.json.backup
-    
-    # Update the dev script to not use turbopack
     sed -i '' 's/"dev": "next dev --turbopack"/"dev": "next dev"/' package.json
-    
-    echo "✅ Temporarily disabled Turbopack to avoid startup issues"
+    print_status "Temporarily disabled Turbopack"
 fi
 
-echo "🏗️ Building Next.js application..."
+print_info "Building Next.js application..."
 npm run build
 
 cd ..
 
-echo "🚀 Starting all services in production mode..."
+echo ""
+print_header "Starting all services in development mode..."
+echo ""
 
-# Start API in production mode
-echo "🔧 Starting API server in production mode..."
+print_service "Starting API server..."
 cd api
-nohup npm run start:prod > ../api.log 2>&1 &
+npm run start:prod > /dev/null 2>&1 &
 API_PID=$!
 cd ..
 
-# Start Web in production mode
-echo "🌐 Starting Web server in production mode..."
+print_service "Starting Web server..."
 cd web
-nohup npm run start > ../web.log 2>&1 &
+npm run start > /dev/null 2>&1 &
 WEB_PID=$!
 cd ..
 
-# Start Prisma Studio
-echo "🗄️ Starting Prisma Studio..."
+print_service "Starting Prisma Studio..."
 cd api
-nohup npx prisma studio > ../prisma-studio.log 2>&1 &
+npx prisma studio > /dev/null 2>&1 &
 PRISMA_PID=$!
 cd ..
 
 # Wait a moment for services to start
-sleep 5
+sleep 3
 
 echo ""
-echo "✅ All services started successfully!"
+print_status "All services started successfully!"
 echo ""
-echo "📱 Service URLs:"
+echo -e "${CYAN}📱 Service URLs:${NC}"
 echo "- 🌐 Frontend (Production): http://localhost:3000"
 echo "- 🔧 Backend (Production): http://localhost:5005"
 echo "- 📚 API Documentation: http://localhost:5005/api/docs"
-echo "- 🗄️ Prisma Studio: http://localhost:5555"
+echo "- 🗄️  Prisma Studio: http://localhost:5555"
 echo ""
-echo "🌐 Opening browsers automatically..."
 
-# Open browsers for the main services (Prisma Studio opens automatically)
+print_info "Opening browsers automatically..."
+
+# Open browsers for the main services
 if command -v open &> /dev/null; then
     # macOS
     sleep 2 && open http://localhost:3000 &
@@ -119,27 +188,42 @@ elif command -v start &> /dev/null; then
     sleep 2 && start http://localhost:3000 &
     sleep 3 && start http://localhost:5005/api/docs &
 else
-    echo "⚠️  Could not automatically open browsers. Please open manually:"
+    print_warning "Could not automatically open browsers. Please open manually:"
     echo "   Frontend: http://localhost:3000"
     echo "   API Docs: http://localhost:5005/api/docs"
-    echo "   Prisma Studio: http://localhost:5555 (opens automatically)"
+    echo "   Prisma Studio: http://localhost:5555"
 fi
 
 echo ""
-echo "📋 Process IDs (for stopping services):"
-echo "- API: $API_PID"
-echo "- Web: $WEB_PID"
-echo "- Prisma Studio: $PRISMA_PID"
+echo -e "${YELLOW}💡 Press Ctrl+C to stop all services${NC}"
 echo ""
-echo "📄 Log files:"
-echo "- API logs: api.log"
-echo "- Web logs: web.log"
-echo "- Prisma Studio logs: prisma-studio.log"
+
+# Show real-time logs
+echo -e "${CYAN}📄 Real-time logs:${NC}"
 echo ""
-echo "🛑 To stop all services:"
-echo "kill $API_PID $WEB_PID $PRISMA_PID"
-echo ""
-echo "💡 Tip: You can also use 'npm run start:prod' from the root directory"
-echo ""
-echo "⚠️  Note: Turbopack was temporarily disabled to avoid startup issues."
-echo "   To re-enable it later, run: bash restore-turbopack.sh" 
+
+# Function to show logs with colors
+show_logs() {
+    # API logs
+    if [ -f "api.log" ]; then
+        tail -f api.log | sed 's/^/[API] /' &
+    fi
+    
+    # Web logs  
+    if [ -f "web.log" ]; then
+        tail -f web.log | sed 's/^/[WEB] /' &
+    fi
+    
+    # Prisma logs
+    if [ -f "prisma-studio.log" ]; then
+        tail -f prisma-studio.log | sed 's/^/[PRISMA] /' &
+    fi
+}
+
+# Start showing logs
+show_logs
+
+# Keep the script running
+while true; do
+    sleep 1
+done 

@@ -27,10 +27,10 @@ Key features include:
 ## 🚀 Quick Start
 
 ```bash
-# Clone and start everything in interactive development mode (RECOMMENDED)
+# Clone and start everything in interactive development mode (DEFAULT)
 git clone <your-repository>
 cd full-stack-product-and-category
-npm run dev:interactive
+npm run dev
 ```
 
 This will automatically:
@@ -296,14 +296,14 @@ This approach leverages PostgreSQL's `pg_trgm` extension for efficient and accur
 - Docker and Docker Compose
 - npm (package manager)
 
-### Option 1: Interactive Development Mode (RECOMMENDED)
+### Option 1: Interactive Development Mode (DEFAULT)
 
 ```bash
 git clone <your-repository>
 cd full-stack-product-and-category
 
-# Start in interactive mode with real-time logs
-npm run dev:interactive
+# Start in interactive mode with real-time logs (DEFAULT)
+npm run dev
 ```
 
 **This will automatically:**
@@ -353,11 +353,11 @@ npm run start:prod
 git clone <your-repository>
 cd full-stack-product-and-category
 
-# Interactive mode (development)
-bash setup-interactive.sh
+# Interactive mode (development) - DEFAULT
+bash setup.sh
 
 # Production mode
-bash setup.sh
+bash setup-production.sh
 ```
 
 #### Method B: Manual step-by-step setup
@@ -406,96 +406,95 @@ The project is configured to build successfully even with ESLint warnings and Ty
 
 ## 🔧 Useful Scripts
 
-### Development Scripts (RECOMMENDED)
+### Development Scripts (DEFAULT)
 ```bash
-# 🚀 Interactive Development (NEW)
-npm run dev:interactive    # Start with real-time logs and Ctrl+C to stop
-npm run dev:foreground     # Alternative command for interactive mode
+# 🚀 Interactive Development (DEFAULT)
+npm run dev              # Start with real-time logs and Ctrl+C to stop
+npm run start            # Alternative command
 
 # 🏭 Production
-npm run start:prod         # Complete production setup and start all services
-npm run stop               # Stop all running services
-npm run status             # Check status of all services
-npm run restart            # Restart all services
+npm run start:prod       # Complete production setup and start all services
+npm run stop             # Stop all running services
+npm run status           # Check status of all services
+npm run restart          # Restart all services
 
 # Alternative commands (using bash scripts directly)
-bash setup-interactive.sh  # Interactive development mode
-bash setup.sh              # Production setup
-bash stop-all.sh           # Stop all services
-bash status.sh             # Check status of all services
+bash setup.sh            # Interactive development mode (DEFAULT)
+bash setup-production.sh # Production setup
+bash stop-all.sh         # Stop all services
+bash status.sh           # Check status of all services
 ```
 
 ### Package.json Commands (from root)
 ```bash
-# 🚀 Development (Interactive)
-npm run dev:interactive    # Start with real-time logs and Ctrl+C to stop
-npm run dev:foreground     # Alternative command
+# 🚀 Development (Interactive) - DEFAULT
+npm run dev              # Start with real-time logs and Ctrl+C to stop
+npm run start            # Alternative command
 
 # 🏭 Production
-npm run start:prod         # Start all services in production mode
-npm run stop               # Stop all running services
-npm run status             # Check status of all services
-npm run restart            # Restart all services
+npm run start:prod       # Start all services in production mode
+npm run stop             # Stop all running services
+npm run status           # Check status of all services
+npm run restart          # Restart all services
 
 # 📄 Logs & Maintenance
-npm run logs               # List log files
-npm run logs:api           # Follow API logs
-npm run logs:web           # Follow Web logs
-npm run logs:prisma        # Follow Prisma Studio logs
-npm run clean              # Clean log files
-npm run restore-turbopack  # Restore Turbopack for development
+npm run logs             # List log files
+npm run logs:api         # Follow API logs
+npm run logs:web         # Follow Web logs
+npm run logs:prisma      # Follow Prisma Studio logs
+npm run clean            # Clean log files
+npm run restore-turbopack # Restore Turbopack for development
 ```
 
 ### Workspace Commands (from root)
 ```bash
-# 🚀 Development (Interactive)
-npm run dev:interactive    # Start with real-time logs and Ctrl+C to stop
-npm run dev:foreground     # Alternative command
+# 🚀 Development (Interactive) - DEFAULT
+npm run dev              # Start with real-time logs and Ctrl+C to stop
+npm run start            # Alternative command
 
 # 🏭 Production
-npm run start:prod         # Start all services in production mode
-npm run stop               # Stop all running services
-npm run status             # Check status of all services
-npm run restart            # Restart all services
+npm run start:prod       # Start all services in production mode
+npm run stop             # Stop all running services
+npm run status           # Check status of all services
+npm run restart          # Restart all services
 
 # 🔧 Development
-npm run dev                # Start both backend and frontend (development)
-npm run dev:api            # Start backend only (development)
-npm run dev:web            # Start frontend only (development)
+npm run dev:api          # Start backend only (development)
+npm run dev:web          # Start frontend only (development)
 
 # 🏗️ Build & Test
-npm run build              # Build all packages
-npm run test               # Run all tests
+npm run build            # Build all packages
+npm run test             # Run all tests
 
 # 🗄️ Database
-npm run db:setup           # Setup database with sample data
-npm run docker:up          # Start database
-npm run docker:down        # Stop database
+npm run db:setup         # Setup database with sample data
+npm run docker:up        # Start database
+npm run docker:down      # Stop database
 
 # 📄 Logs & Maintenance
-npm run logs               # List log files
-npm run logs:api           # Follow API logs
-npm run logs:web           # Follow Web logs
-npm run logs:prisma        # Follow Prisma Studio logs
-npm run clean              # Clean log files
-npm run restore-turbopack  # Restore Turbopack for development
+npm run logs             # List log files
+npm run logs:api         # Follow API logs
+npm run logs:web         # Follow Web logs
+npm run logs:prisma      # Follow Prisma Studio logs
+npm run clean            # Clean log files
+npm run restore-turbopack # Restore Turbopack for development
 ```
 
 ### Backend (api/)
 ```bash
-npm run dev                # Development
-npm run build              # Build for production
-npm run start              # Production
-npm run test               # Run tests
-npm run db:reset           # Reset database + seeds
+npm run dev              # Development
+npm run build            # Build for production
+npm run start            # Production
+npm run test             # Run tests
+npm run db:reset         # Reset database + seeds
 ```
 
 ### Frontend (web/)
 ```bash
-npm run dev                # Development
-npm run build              # Build for production
-npm run start              # Production
-npm run test               # Run tests
+npm run dev              # Development
+npm run build            # Build for production
+npm run start            # Production
+npm run test             # Run tests
 ```
 
 ---
@@ -543,7 +542,7 @@ npm run test               # Run tests
 - ✅ Tables with TanStack Table
 - ✅ **Dedicated products page with category tree navigation**
 - ✅ **Dynamic URL composition for category paths**
-- ✅ **Interactive development mode with real-time logs**
+- ✅ **Interactive development mode with real-time logs (DEFAULT)**
 
 ---
 
@@ -580,6 +579,6 @@ This project demonstrates:
 4. **Responsive and user-friendly interface**
 5. **Complete API documentation**
 6. **Simple and efficient setup** with Docker and npm workspaces
-7. **Interactive development mode** with real-time logs and easy service control
+7. **Interactive development mode** with real-time logs and easy service control (DEFAULT)
 
 The project is designed to showcase robust development practices and is ready to run with the provided setup instructions.
