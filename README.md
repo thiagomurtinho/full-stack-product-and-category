@@ -1,13 +1,16 @@
 # Full Stack Product and Category
 
+A modern full-stack application built with **Turborepo** monorepo architecture, featuring Express.js backend with TypeScript, Next.js frontend, and PostgreSQL database with Prisma ORM.
+
 ## 📋 Summary
 
 This project is a full-stack application showcasing a robust architecture and modern development practices. It includes:
 
-- **Backend**: Built with Express.js, TypeScript, and Prisma ORM, following Functional Core/Imperative Shell ans Domain-Driven Design (DDD) principles. It features Swagger API documentation and a clear separation of layers (domain, repository, handler, routes, middleware).
+- **Backend**: Built with Express.js, TypeScript, and Prisma ORM, following Functional Core/Imperative Shell and Domain-Driven Design (DDD) principles. It features Swagger API documentation and a clear separation of layers (domain, repository, handler, routes, middleware).
 - **Frontend**: Developed with Next.js 15 and React 19, implementing DDD with a separate data layer and reusable contracts. The interface is modern, responsive, and styled with Tailwind CSS and Radix UI.
 - **Testing**: Comprehensive unit and integration tests for both backend and frontend, achieving 80% test coverage.
 - **Database**: PostgreSQL managed via Docker, with Prisma ORM for schema and migrations.
+- **Monorepo**: Built with Turborepo for efficient development and build management.
 
 Key features include:
 
@@ -26,19 +29,165 @@ Key features include:
 
 ## 🚀 Quick Start
 
+### 📋 Prerequisites
+
+- **Node.js** >= 18
+- **Docker** and **Docker Compose**
+- **npm** or **pnpm**
+
+### ⚡ Quick Start
+
+#### 1. **First time (initial setup)**
 ```bash
-# Clone and start everything in production mode
-git clone <your-repository>
-cd full-stack-product-and-category
-pnpm start:prod
+# Install dependencies
+npm install
+
+# Run development (automatic configuration)
+npm run dev
 ```
 
-This will automatically:
-- ✅ Install dependencies
-- ✅ Start PostgreSQL database
-- ✅ Setup and seed the database
-- ✅ Build and start all services
-- ✅ Open browsers for Frontend, API Docs, and Prisma Studio
+#### 2. **Daily use**
+```bash
+npm run dev
+```
+
+#### 3. **Stop all services**
+```bash
+npm run stop:all
+```
+
+### 🎯 What happens
+
+The `npm run dev` command automatically executes:
+
+**Development Mode:**
+
+1. **🔍 Verification**: Checks prerequisites (Node.js, Docker, dependencies)
+2. **🔧 Environment**: Configures environment variables automatically
+3. **🐘 PostgreSQL**: Starts database via Docker Compose
+4. **🗄️ Database**: Runs migrations and seed
+5. **🔧 Backend**: Starts API on port 5005
+6. **🌐 Frontend**: Starts Next.js on port 3000
+7. **📊 Prisma Studio**: Opens database interface on port 5555
+8. **🌐 Browser**: Opens all services automatically
+
+**Production Mode:**
+The `npm run start` command automatically executes:
+
+1. **🔍 Verification**: Checks prerequisites (Node.js, Docker, dependencies)
+2. **🔧 Environment**: Sets up environment variables
+3. **🗄️ Database**: Starts PostgreSQL and seeds data
+4. **🏗️ Build**: Builds both applications for production
+5. **🚀 Start**: Starts services sequentially (API → Web → Studio)
+6. **🎉 Ready**: All services running and accessible
+
+### 📱 Available Services
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Frontend** | http://localhost:3000 | Next.js Interface |
+| **API Docs** | http://localhost:5005/api/docs | Swagger Documentation |
+| **Prisma Studio** | http://localhost:5555 | Database Manager (opens automatically) |
+
+### 🛠️ Available Scripts
+
+```bash
+# Complete development setup
+npm run dev
+
+# Production-like setup (build + start)
+npm run build  # Build both apps
+npm run start      # Start in production mode
+
+# Check setup
+npm run check:setup
+
+# Environment setup only
+npm run setup:env
+
+# Database setup only
+npm run setup:db
+
+# Development (without database setup)
+npm run dev:all
+
+# Stop everything
+npm run stop:all
+
+# Individual development
+npm run dev:api    # Backend only
+npm run dev:web    # Frontend only
+npm run dev:studio # Prisma Studio only
+
+# Individual production
+npm run build:api  # Build backend only
+npm run build:web  # Build frontend only
+npm run start:api  # Start backend only
+npm run start:web  # Start frontend only
+```
+
+### 🔧 Automatic Configuration
+
+The `setup:env` script automatically configures:
+
+- ✅ **Creates `.env` file** if it doesn't exist
+- ✅ **Uses `env.example`** if available
+- ✅ **Default settings** if no template exists
+- ✅ **Doesn't overwrite** existing files
+
+### 🔧 Troubleshooting
+
+#### Database not connecting
+```bash
+# Check if Docker is running
+docker ps
+
+# Restart containers
+docker-compose down && docker-compose up -d postgres
+```
+
+#### Port in use
+```bash
+# Stop all services
+npm run stop:all
+
+# Check processes
+lsof -i :3000
+lsof -i :5005
+lsof -i :5555
+```
+
+#### Outdated dependencies
+```bash
+# Clean and reinstall
+rm -rf node_modules apps/*/node_modules
+npm install
+```
+
+### 📁 Project Structure
+
+```
+full-stack-product-and-category/
+├── apps/
+│   ├── api/          # Backend (Express + Prisma)
+│   └── web/          # Frontend (Next.js)
+├── scripts/
+│   └── open-urls.js  # Script to open browser
+├── docker-compose.yml # PostgreSQL
+└── package.json       # Quick start scripts
+```
+
+### 🎉 Ready!
+
+After running `npm run dev`, you'll have:
+
+- ✅ **Backend** running with Swagger documentation
+- ✅ **Frontend** with modern interface
+- ✅ **Database** configured and populated
+- ✅ **Prisma Studio** for data management
+- ✅ **Browser** opened with all services
+
+**Have fun developing! 🚀**
 
 ---
 
@@ -411,15 +560,14 @@ pnpm restore-turbopack  # Restore Turbopack for development
 ### Workspace Commands (from root)
 ```bash
 # 🚀 Production (Recommended)
-pnpm start:prod   # Start all services in production mode
-pnpm stop         # Stop all running services
-pnpm status       # Check status of all services
-pnpm restart      # Restart all services
+npm run start     # Start all services in production mode
+npm run build # Build both applications
+npm run stop:all  # Stop all running services
 
 # 🔧 Development
-pnpm dev          # Start both backend and frontend (development)
-pnpm dev:api      # Start backend only (development)
-pnpm dev:web      # Start frontend only (development)
+npm run dev       # Complete development setup (check, env, db, services)
+npm run dev:api   # Start backend only (development)
+npm run dev:web   # Start frontend only (development)
 
 # 🏗️ Build & Test
 pnpm build        # Build all packages
@@ -525,6 +673,12 @@ pnpm test         # Run tests
 - React Hook Form
 - TanStack Table
 
+### Infrastructure
+- **Turborepo** (Monorepo management)
+- Docker & Docker Compose
+- PostgreSQL
+- pnpm (Package manager)
+
 ---
 
 ## 📝 Key Highlights
@@ -536,6 +690,7 @@ This project demonstrates:
 3. **Best practices** in modern full-stack development
 4. **Responsive and user-friendly interface**
 5. **Complete API documentation**
-6. **Simple and efficient setup** with Docker and pnpm workspace
+6. **Simple and efficient setup** with Docker and Turborepo monorepo
+7. **Turborepo optimization** for fast builds and efficient development
 
 The project is designed to showcase robust development practices and is ready to run with the provided setup instructions.
