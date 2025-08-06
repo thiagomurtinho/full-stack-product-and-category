@@ -77,9 +77,9 @@ export const categoriesApi = {
     })
     const [response, error] = await api.post<any>('/categories', validatedData)
     
-    // if (error) {
-    //   throw error
-    // }
+    if (error) {
+      throw error
+    }
     
     return safeValidateApiResponse(response, apiCategorySchema, 'categories.create response')
   },
