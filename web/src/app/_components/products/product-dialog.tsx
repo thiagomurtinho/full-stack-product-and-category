@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -19,11 +19,19 @@ interface ProductDialogProps {
   product?: Product
   onSubmit: (data: CreateProduct | UpdateProduct) => Promise<void>
   trigger?: React.ReactNode
+  onClose?: () => void
 }
 
-export function ProductDialog({ product, onSubmit, trigger }: ProductDialogProps) {
+export function ProductDialog({ product, onSubmit, trigger, onClose }: ProductDialogProps) {
   const [open, setOpen] = useState(!!product)
   const [isLoading, setIsLoading] = useState(false)
+
+  // Always open dialog when product is provided (for editing)
+  useEffect(() => {
+    if (product) {
+      setOpen(true)
+    }
+  }, [product])
 
   const handleSubmit = async (data: CreateProduct | UpdateProduct) => {
     try {
@@ -41,8 +49,15 @@ export function ProductDialog({ product, onSubmit, trigger }: ProductDialogProps
     setOpen(false)
   }
 
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen)
+    if (!newOpen && onClose) {
+      onClose()
+    }
+  }
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {trigger || (
           <Button>
@@ -56,12 +71,12 @@ export function ProductDialog({ product, onSubmit, trigger }: ProductDialogProps
           <DialogTitle>
             {product ? "Edit Product" : "Create New Product"}
           </DialogTitle>
-                      <DialogDescription>
-              {product 
-                ? "Make the necessary changes to the product."
-                : "Fill in the information for the new product."
-              }
-            </DialogDescription>
+          <DialogDescription>
+            {product 
+              ? "Make the necessary changes to the product."
+              : "Fill in the information for the new product."
+            }
+          </DialogDescription>
         </DialogHeader>
         <ProductForm
           product={product}

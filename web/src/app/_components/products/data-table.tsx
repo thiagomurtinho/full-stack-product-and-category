@@ -15,7 +15,6 @@ import {
 } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   Table,
   TableBody,
@@ -30,7 +29,9 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useDebouncedCallback } from "@/lib/hooks/use-debounce"
+import { SearchInput } from "./search-input"
+import { ActiveFilters } from "./active-filters"
+import { CategoryFilterIndicator } from "./category-filter-indicator"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -74,39 +75,8 @@ export function DataTable<TData, TValue>({
     pageSize: 10,
   })
   
-  // Local state for search input to maintain focus
+  // Local state for search value to display in active filters
   const [searchValue, setSearchValue] = React.useState("")
-  const searchInputRef = React.useRef<HTMLInputElement>(null)
-  const [shouldMaintainFocus, setShouldMaintainFocus] = React.useState(false)
-  
-  // Debounced search callback
-  const debouncedSearch = useDebouncedCallback(
-    (value: string) => {
-      onSearchChange?.(value)
-    },
-    300 // 300ms delay
-  )
-  
-  // Track when user is typing to maintain focus
-  React.useEffect(() => {
-    if (searchValue.length > 0) {
-      setShouldMaintainFocus(true)
-    }
-  }, [searchValue])
-  
-  // Keep focus on search input during loading if user was typing
-  React.useEffect(() => {
-    if (isLoading && shouldMaintainFocus && searchInputRef.current) {
-      // Small delay to ensure the component has re-rendered
-      const timeoutId = setTimeout(() => {
-        if (searchInputRef.current) {
-          searchInputRef.current.focus()
-        }
-      }, 0)
-      
-      return () => clearTimeout(timeoutId)
-    }
-  }, [isLoading, shouldMaintainFocus])
 
   const table = useReactTable({
     data,
@@ -132,18 +102,6 @@ export function DataTable<TData, TValue>({
     onPaginationChange: setPagination,
   })
 
-  // Handle search input with debounce
-  const handleSearchChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value
-    setSearchValue(value) // Update local state immediately for UI responsiveness
-    debouncedSearch(value) // Debounced API call
-  }, [debouncedSearch])
-  
-  // Handle search input blur
-  const handleSearchBlur = React.useCallback(() => {
-    setShouldMaintainFocus(false)
-  }, [])
-
   // Handle page changes
   const handlePreviousPage = React.useCallback(() => {
     if (hasPrev && onPageChange) {
@@ -160,40 +118,18 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full min-w-0">
       <div className="flex items-center py-4">
-        <Input
-          ref={searchInputRef}
-          placeholder="Search products..."
-          value={searchValue}
-          onChange={handleSearchChange}
-          onBlur={handleSearchBlur}
-          className="max-w-sm"
-          disabled={isLoading}
+        <SearchInput
+          onSearchChange={onSearchChange || (() => {})}
+          onSearchValueChange={setSearchValue}
+          isLoading={isLoading}
         />
         
-        {/* Category filter indicator */}
-        {isCategoryFilterPending && (
-          <div className="ml-4 flex items-center gap-2 text-sm text-blue-600">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-            <span>Applying category filter...</span>
-          </div>
-        )}
+        <CategoryFilterIndicator isCategoryFilterPending={isCategoryFilterPending} />
         
-        {/* Active filters summary */}
-        {(searchValue || isCategoryFilterPending) && (
-          <div className="ml-4 flex items-center gap-2 text-sm text-gray-600">
-            <span>Active filters:</span>
-            {searchValue && (
-              <span className="bg-gray-100 px-2 py-1 rounded text-xs">
-                Search: "{searchValue}"
-              </span>
-            )}
-            {isCategoryFilterPending && (
-              <span className="bg-blue-100 px-2 py-1 rounded text-xs text-blue-700">
-                Categories
-              </span>
-            )}
-          </div>
-        )}
+        <ActiveFilters 
+          searchValue={searchValue}
+          isCategoryFilterPending={isCategoryFilterPending}
+        />
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

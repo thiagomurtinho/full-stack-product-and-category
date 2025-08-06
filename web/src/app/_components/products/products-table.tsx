@@ -67,6 +67,7 @@ export function ProductsTable({ initialProducts, selectedCategoryIds = [], isCat
     try {
       setIsLoading(true)
       await productsApi.update(editingProduct.id, data)
+      // Clear editing state after successful update
       setEditingProduct(null)
       // Refresh the list after updating
       refresh()
@@ -109,6 +110,11 @@ export function ProductsTable({ initialProducts, selectedCategoryIds = [], isCat
     const url = `/products/${categoryPath}/${product.slug}`
     
     window.open(url, '_blank')
+  }
+
+  // Function to clear editing state
+  const clearEditingState = () => {
+    setEditingProduct(null)
   }
 
   const columns = createColumns({
@@ -161,6 +167,7 @@ export function ProductsTable({ initialProducts, selectedCategoryIds = [], isCat
         <ProductDialog
           product={editingProduct}
           onSubmit={handleUpdateProduct}
+          onClose={clearEditingState}
         />
       )}
 

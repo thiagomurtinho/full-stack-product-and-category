@@ -129,10 +129,14 @@ export function CategoryTree({ categories, selectedIds, onSelectionChange }: Cat
         <div 
           className="flex items-center gap-2 py-1 px-2 hover:bg-gray-100 rounded cursor-pointer"
           style={{ paddingLeft: `${node.level * 16 + 8}px` }}
+          onClick={() => hasChildren && toggleNode(node.id)}
         >
           {hasChildren && (
             <button
-              onClick={() => toggleNode(node.id)}
+              onClick={(e) => {
+                e.stopPropagation()
+                toggleNode(node.id)
+              }}
               className="p-1 hover:bg-gray-200 rounded"
             >
               {isExpanded ? (
@@ -148,6 +152,7 @@ export function CategoryTree({ categories, selectedIds, onSelectionChange }: Cat
             checked={isSelected}
             onCheckedChange={(checked) => handleCategoryToggle(node.id, !!checked)}
             className="mr-2"
+            onClick={(e) => e.stopPropagation()}
           />
           
           <span className="text-sm font-medium">{node.name}</span>
