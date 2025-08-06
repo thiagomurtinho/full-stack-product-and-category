@@ -57,9 +57,9 @@ export const categoriesApi = {
   getWithPath: async (id: string): Promise<CategoryWithPath> => {
     const [data, error] = await api.get<any>(`/categories/${id}/path`)
     
-    // if (error) {
-    //   throw error
-    // }
+    if (error) {
+      throw error
+    }
     
     return safeValidateApiResponse(data, apiCategoryWithPathSchema, 'categories.getWithPath')
   },
