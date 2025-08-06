@@ -3,9 +3,11 @@
 import { useMemo, useState } from "react"
 import { productsApi } from "@/data/products/products.api"
 import { Product, CreateProduct, UpdateProduct, ProductWithCategories } from "@/data/products/products.types"
+import { Category } from "@/data/categories/categories.types"
 import { DataTable } from "./data-table"
 import { createColumns } from "./columns"
 import { ProductDialog } from "./product-dialog"
+import { ProductEditDialog } from "./product-edit-dialog"
 import { useServerPagination } from "./use-server-pagination"
 import {
   Dialog,
@@ -19,12 +21,13 @@ import { Button } from "@/components/ui/button"
 
 interface ProductsTableProps {
   initialProducts: Product[]
+  categories: Category[]
   selectedCategoryIds?: string[]
   isCategoryFilterPending?: boolean
 }
 
-export function ProductsTable({ initialProducts, selectedCategoryIds = [], isCategoryFilterPending }: ProductsTableProps) {
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+export function ProductsTable({ initialProducts, categories, selectedCategoryIds = [], isCategoryFilterPending }: ProductsTableProps) {
+  const [editingProduct, setEditingProduct] = useState<ProductWithCategories | null>(null)
   const [deletingProduct, setDeletingProduct] = useState<Product | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -47,10 +50,10 @@ export function ProductsTable({ initialProducts, selectedCategoryIds = [], isCat
     selectedCategoryIds
   })
 
-  const handleCreateProduct = async (data: CreateProduct | UpdateProduct) => {
+  const handleCreateProduct = async (data: CreateProduct) => {
     try {
       setIsLoading(true)
-      const newProduct = await productsApi.create(data as CreateProduct)
+      const newProduct = await productsApi.create(data)
       // Refresh the list after creating
       refresh()
     } catch (error) {
@@ -96,7 +99,7 @@ export function ProductsTable({ initialProducts, selectedCategoryIds = [], isCat
     }
   }
 
-  const handleEdit = (product: Product) => {
+  const handleEdit = (product: ProductWithCategories) => {
     setEditingProduct(product)
   }
 
@@ -129,7 +132,7 @@ export function ProductsTable({ initialProducts, selectedCategoryIds = [], isCat
       <div className="space-y-4 w-full">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">Product List</h2>
-          <ProductDialog onSubmit={handleCreateProduct} />
+          <ProductDialog categories={categories} onSubmit={handleCreateProduct} />
         </div>
         <div className="rounded-md border p-4 bg-red-50">
           <p className="text-red-600">Error loading products: {error}</p>
@@ -142,7 +145,7 @@ export function ProductsTable({ initialProducts, selectedCategoryIds = [], isCat
     <div className="space-y-4 w-full">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Product List</h2>
-        <ProductDialog onSubmit={handleCreateProduct} />
+        <ProductDialog categories={categories} onSubmit={handleCreateProduct} />
       </div>
 
       <div className="w-full">
@@ -164,8 +167,9 @@ export function ProductsTable({ initialProducts, selectedCategoryIds = [], isCat
 
       {/* Dialog to edit product */}
       {editingProduct && (
-        <ProductDialog
+        <ProductEditDialog
           product={editingProduct}
+          categories={categories}
           onSubmit={handleUpdateProduct}
           onClose={clearEditingState}
         />

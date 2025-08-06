@@ -45,6 +45,7 @@ export function ProductsPage({ initialProducts, categories }: ProductsPageProps)
 
         <ProductsTable 
           initialProducts={initialProducts} 
+          categories={categories}
           selectedCategoryIds={selectedCategoryIds}
           isCategoryFilterPending={isCategoryFilterPending}
         />

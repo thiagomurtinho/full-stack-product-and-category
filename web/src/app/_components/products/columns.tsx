@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Product, ProductWithCategories } from "@/data/products/products.types"
 
 interface ColumnsProps {
-  onEdit: (product: Product) => void
+  onEdit: (product: ProductWithCategories) => void
   onDelete: (product: Product) => void
   onView: (product: ProductWithCategories) => void
 }
