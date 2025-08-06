@@ -133,6 +133,7 @@ export function CategoryTree({ categories, selectedIds, onSelectionChange }: Cat
         >
           {hasChildren && (
             <button
+            type="button"
               onClick={(e) => {
                 e.stopPropagation()
                 toggleNode(node.id)
