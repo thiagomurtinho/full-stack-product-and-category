@@ -24,6 +24,19 @@ Key features include:
 
 ![Frontend Interface](https://github.com/thiagomurtinho/full-stack-product-and-category/raw/main/doc/img/page.png)
 
+## 📚 Documentation
+
+This project includes comprehensive documentation for both technical and product aspects:
+
+### Product Documentation
+- **[Product Requirements](doc/PRODUCT_REQUIREMENTS.md)** | **[(PT-BR)](doc/PRODUCT_REQUIREMENTS_PT_BR.md)** - Complete functional and non-functional requirements
+
+### Architecture Decision Records (ADRs)
+- **[Backend ADR](doc/ADR_BACKEND.md)** | **[(PT-BR)](doc/ADR_BACKEND_PT_BR.md)**  - Domain-Driven Design with Functional Core/Imperative Shell
+- **[Frontend ADR](doc/ADR_FRONTEND.md)** | **[(PT-BR)](doc/ADR_FRONTEND_PT_BR.md)**- Next.js 15 with Domain-Driven Design
+
+These documents provide detailed insights into the architectural decisions, requirements, and implementation strategies used in this project.
+
 ## 🚀 Quick Start
 
 ```bash
@@ -46,19 +59,20 @@ This will automatically:
 
 ## 📑 Index
 
-1. [Technical Questions & Answers](#-technical-questions--answers)
+1. [Documentation](#-documentation)
+2. [Technical Questions & Answers](#-technical-questions--answers)
    - [1.1 Frontend Implementation: Dedicated Products Page](#frontend-implementation-dedicated-products-page-with-category-tree-navigation)
-2. [Architecture](#-architecture)
+3. [Architecture](#-architecture)
    - [Backend](#backend)
    - [Frontend](#frontend)
-3. [Testing](#-testing)
-4. [Quick Setup](#-quick-setup)
-5. [Sample Data](#-sample-data)
-6. [Useful Scripts](#-useful-scripts)
-7. [API Endpoints](#-api-endpoints)
-8. [Implemented Features](#-implemented-features)
-9. [Technologies Used](#-technologies-used)
-10. [Key Highlights](#-key-highlights)
+4. [Testing](#-testing)
+5. [Quick Setup](#-quick-setup)
+6. [Sample Data](#-sample-data)
+7. [Useful Scripts](#-useful-scripts)
+8. [API Endpoints](#-api-endpoints)
+9. [Implemented Features](#-implemented-features)
+10. [Technologies Used](#-technologies-used)
+11. [Key Highlights](#-key-highlights)
 
 ---
 
