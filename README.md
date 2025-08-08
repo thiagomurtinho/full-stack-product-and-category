@@ -4,7 +4,7 @@
 
 This project is a full-stack application showcasing a robust architecture and modern development practices. It includes:
 
-- **Backend**: Built with Express.js, TypeScript, and Prisma ORM, following Functional Core/Imperative Shell ans Domain-Driven Design (DDD) principles. It features Swagger API documentation and a clear separation of layers (domain, repository, handler, routes, middleware).
+- **Backend**: Built with Express.js, TypeScript, and Prisma ORM, following Functional Core/Imperative Shell and Domain-Driven Design (DDD) principles. It features Swagger API documentation and a clear separation of layers (domain, repository, handler, routes, middleware).
 - **Frontend**: Developed with Next.js 15 and React 19, implementing DDD with a separate data layer and reusable contracts. The interface is modern, responsive, and styled with Tailwind CSS and Radix UI.
 - **Testing**: Comprehensive unit and integration tests for both backend and frontend, achieving 80% test coverage.
 - **Database**: PostgreSQL managed via Docker, with Prisma ORM for schema and migrations.
