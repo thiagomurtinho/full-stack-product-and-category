@@ -1,4 +1,4 @@
-import { api, API_BASE_URL } from '../api'
+import { api, API_BASE_URL, apiRequest } from '../api'
 
 // Mock fetch globally
 global.fetch = jest.fn()
@@ -84,6 +84,29 @@ describe('API Base', () => {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
         })
+      )
+      expect(result).toEqual(mockResponse)
+    })
+
+    it('should merge custom headers with default content type', async () => {
+      const mockResponse = { data: 'test' }
+      ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockResponse),
+      })
+
+      const result = await apiRequest('/test', {
+        headers: { Authorization: 'Bearer token' },
+      })
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        `${API_BASE_URL}/test`,
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer token',
+          },
+        }),
       )
       expect(result).toEqual(mockResponse)
     })
