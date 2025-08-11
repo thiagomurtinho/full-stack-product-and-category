@@ -16,7 +16,7 @@
 
 **Accepted** - Implemented and in production
 
-**Date**: December 2024  
+**Date**: August 2025
 **Responsible**: Senior Software Engineer  
 **Review**: Annual
 
